@@ -1,32 +1,28 @@
-# Prerequisites
-*.d
+# Node.js
+node_modules/
+dist/
+npm-debug.log
+yarn-error.log
+.env
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+# Tauri / Rust
+src-tauri/target/
+src-tauri/binaries/heurix-engine*
 
-# Precompiled Headers
-*.gch
-*.pch
+# C++ Build
+build/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+compile_commands.json
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+# IDEs / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
 
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
+# Project specifics
+canary/
+*.log

@@ -1,0 +1,1 @@
+{"severity":"medium","description":"High-velocity file modifications detected (26 events in 2000ms)","entropy":0.000000,"pid":0,"process_name":"","action":"none","threat_score":40.000000,"timestamp_ms":1787815659312}
