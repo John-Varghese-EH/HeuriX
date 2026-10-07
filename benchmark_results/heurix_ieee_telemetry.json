@@ -1,0 +1,606 @@
+{
+  "safari_profile": {
+    "metadata": {
+      "root_directory": "/home/j0x/Documents/GitHub/HeuriX/test_sandbox",
+      "total_baseline_files": 30,
+      "total_post_files": 60,
+      "pristine_count": 8,
+      "lost_count": 44,
+      "replica_count": 26,
+      "pristine_ratio": 0.2667,
+      "lost_ratio": 1.4667,
+      "replica_ratio": 0.8667
+    },
+    "folder_summary": {
+      "root": {
+        "pristine": 8,
+        "lost": 44,
+        "replica": 26
+      }
+    },
+    "format_summary": {
+      ".locked": {
+        "pristine": 8,
+        "lost": 11,
+        "replica": 6
+      },
+      ".qilin": {
+        "pristine": 0,
+        "lost": 18,
+        "replica": 8
+      },
+      ".akira": {
+        "pristine": 0,
+        "lost": 15,
+        "replica": 12
+      }
+    },
+    "details": {
+      "pristine": [
+        {
+          "rel_path": "generated_module_1.js.locked",
+          "extension": ".locked",
+          "size": 4096,
+          "entropy": 7.9573
+        },
+        {
+          "rel_path": "generated_module_6.js.locked",
+          "extension": ".locked",
+          "size": 4096,
+          "entropy": 7.9513
+        },
+        {
+          "rel_path": "generated_module_10.cpp.locked",
+          "extension": ".locked",
+          "size": 4096,
+          "entropy": 7.951
+        },
+        {
+          "rel_path": "generated_module_11.js.locked",
+          "extension": ".locked",
+          "size": 4096,
+          "entropy": 7.9594
+        },
+        {
+          "rel_path": "generated_module_18.js.locked",
+          "extension": ".locked",
+          "size": 4096,
+          "entropy": 7.9585
+        },
+        {
+          "rel_path": "generated_module_20.js.locked",
+          "extension": ".locked",
+          "size": 4096,
+          "entropy": 7.9612
+        },
+        {
+          "rel_path": "generated_module_26.js.locked",
+          "extension": ".locked",
+          "size": 4096,
+          "entropy": 7.9521
+        },
+        {
+          "rel_path": "generated_module_27.js.locked",
+          "extension": ".locked",
+          "size": 4096,
+          "entropy": 7.9494
+        }
+      ],
+      "lost": [
+        {
+          "rel_path": "generated_module_0.cpp.qilin",
+          "extension": ".qilin",
+          "original_size": 4096,
+          "before_entropy": 7.9563,
+          "after_entropy": 0.0,
+          "reason": "deleted_or_renamed"
+        },
+        {
+          "rel_path": "generated_module_2.js.akira",
+          "extension": ".akira",
+          "original_size": 4096,
+          "before_entropy": 7.9559,
+          "after_entropy": 0.0,
+          "reason": "deleted_or_renamed"
+        },
+        {
+          "rel_path": "generated_module_3.js.qilin",
+          "extension": ".qilin",
+          "original_size": 4096,
+          "before_entropy": 7.9506,
+          "after_entropy": 0.0,
+          "reason": "deleted_or_renamed"
+        },
+        {
+          "rel_path": "generated_module_4.js.akira",
+          "extension": ".akira",
+          "original_size": 4096,
+          "before_entropy": 7.9552,
+          "after_entropy": 0.0,
+          "reason": "deleted_or_renamed"
+        },
+        {
+          "rel_path": "generated_module_5.js.akira",
+          "extension": ".akira",
+          "original_size": 4096,
+          "new_size": 4096,
+          "before_entropy": 7.9491,
+          "after_entropy": 7.9586,
+          "reason": "modified_hash"
+        },
+        {
+          "rel_path": "generated_module_7.js.akira",
+          "extension": ".akira",
+          "original_size": 4096,
+          "before_entropy": 7.9539,
+          "after_entropy": 0.0,
+          "reason": "deleted_or_renamed"
+        },
+        {
+          "rel_path": "generated_module_8.js.qilin",
+          "extension": ".qilin",
+          "original_size": 4096,
+          "before_entropy": 7.9539,
+          "after_entropy": 0.0,
+          "reason": "deleted_or_renamed"
+        },
+        {
+          "rel_path": "generated_module_9.js.qilin",
+          "extension": ".qilin",
+          "original_size": 4096,
+          "before_entropy": 7.9553,
+          "after_entropy": 0.0,
+          "reason": "deleted_or_renamed"
+        },
+        {
+          "rel_path": "generated_module_12.js.qilin",
+          "extension": ".qilin",
+          "original_size": 4096,
+          "new_size": 4096,
+          "before_entropy": 7.952,
+          "after_entropy": 7.9558,
+          "reason": "modified_hash"
+        },
+        {
+          "rel_path": "generated_module_13.cpp.akira",
+          "extension": ".akira",
+          "original_size": 4096,
+          "before_entropy": 7.9586,
+          "after_entropy": 0.0,
+          "reason": "deleted_or_renamed"
+        },
+        {
+          "rel_path": "generated_module_14.js.qilin",
+          "extension": ".qilin",
+          "original_size": 4096,
+          "before_entropy": 7.9584,
+          "after_entropy": 0.0,
+          "reason": "deleted_or_renamed"
+        },
+        {
+          "rel_path": "generated_module_15.cpp.qilin",
+          "extension": ".qilin",
+          "original_size": 4096,
+          "before_entropy": 7.9529,
+          "after_entropy": 0.0,
+          "reason": "deleted_or_renamed"
+        },
+        {
+          "rel_path": "generated_module_16.cpp.qilin",
+          "extension": ".qilin",
+          "original_size": 4096,
+          "new_size": 4096,
+          "before_entropy": 7.9562,
+          "after_entropy": 7.9595,
+          "reason": "modified_hash"
+        },
+        {
+          "rel_path": "generated_module_17.cpp.qilin",
+          "extension": ".qilin",
+          "original_size": 4096,
+          "before_entropy": 7.9566,
+          "after_entropy": 0.0,
+          "reason": "deleted_or_renamed"
+        },
+        {
+          "rel_path": "generated_module_19.js.qilin",
+          "extension": ".qilin",
+          "original_size": 4096,
+          "before_entropy": 7.951,
+          "after_entropy": 0.0,
+          "reason": "deleted_or_renamed"
+        },
+        {
+          "rel_path": "generated_module_21.js.qilin",
+          "extension": ".qilin",
+          "original_size": 4096,
+          "before_entropy": 7.9549,
+          "after_entropy": 0.0,
+          "reason": "deleted_or_renamed"
+        },
+        {
+          "rel_path": "generated_module_22.cpp.akira",
+          "extension": ".akira",
+          "original_size": 4096,
+          "before_entropy": 7.9529,
+          "after_entropy": 0.0,
+          "reason": "deleted_or_renamed"
+        },
+        {
+          "rel_path": "generated_module_23.js.akira",
+          "extension": ".akira",
+          "original_size": 4096,
+          "before_entropy": 7.9488,
+          "after_entropy": 0.0,
+          "reason": "deleted_or_renamed"
+        },
+        {
+          "rel_path": "generated_module_24.js.qilin",
+          "extension": ".qilin",
+          "original_size": 4096,
+          "before_entropy": 7.9512,
+          "after_entropy": 0.0,
+          "reason": "deleted_or_renamed"
+        },
+        {
+          "rel_path": "generated_module_25.cpp.qilin",
+          "extension": ".qilin",
+          "original_size": 4096,
+          "new_size": 4096,
+          "before_entropy": 7.9498,
+          "after_entropy": 7.9598,
+          "reason": "modified_hash"
+        },
+        {
+          "rel_path": "generated_module_28.cpp.akira",
+          "extension": ".akira",
+          "original_size": 4096,
+          "before_entropy": 7.9482,
+          "after_entropy": 0.0,
+          "reason": "deleted_or_renamed"
+        },
+        {
+          "rel_path": "generated_module_29.cpp.qilin",
+          "extension": ".qilin",
+          "original_size": 4096,
+          "before_entropy": 7.9605,
+          "after_entropy": 0.0,
+          "reason": "deleted_or_renamed"
+        },
+        {
+          "rel_path": "generated_module_0.cpp.qilin.akira",
+          "extension": ".akira",
+          "new_size": 4096,
+          "after_entropy": 7.9565,
+          "reason": "renamed_encrypted_target"
+        },
+        {
+          "rel_path": "generated_module_2.js.akira.locked",
+          "extension": ".locked",
+          "new_size": 4096,
+          "after_entropy": 7.9523,
+          "reason": "renamed_encrypted_target"
+        },
+        {
+          "rel_path": "generated_module_3.js.qilin.locked",
+          "extension": ".locked",
+          "new_size": 4096,
+          "after_entropy": 7.9608,
+          "reason": "renamed_encrypted_target"
+        },
+        {
+          "rel_path": "generated_module_4.js.akira.locked",
+          "extension": ".locked",
+          "new_size": 4096,
+          "after_entropy": 7.9591,
+          "reason": "renamed_encrypted_target"
+        },
+        {
+          "rel_path": "generated_module_5.js.akira.akira",
+          "extension": ".akira",
+          "new_size": 4096,
+          "after_entropy": 7.9482,
+          "reason": "renamed_encrypted_target"
+        },
+        {
+          "rel_path": "generated_module_7.js.akira.akira",
+          "extension": ".akira",
+          "new_size": 4096,
+          "after_entropy": 7.9544,
+          "reason": "renamed_encrypted_target"
+        },
+        {
+          "rel_path": "generated_module_8.js.qilin.locked",
+          "extension": ".locked",
+          "new_size": 4096,
+          "after_entropy": 7.9546,
+          "reason": "renamed_encrypted_target"
+        },
+        {
+          "rel_path": "generated_module_9.js.qilin.akira",
+          "extension": ".akira",
+          "new_size": 4096,
+          "after_entropy": 7.9584,
+          "reason": "renamed_encrypted_target"
+        },
+        {
+          "rel_path": "generated_module_12.js.qilin.locked",
+          "extension": ".locked",
+          "new_size": 4096,
+          "after_entropy": 7.9515,
+          "reason": "renamed_encrypted_target"
+        },
+        {
+          "rel_path": "generated_module_13.cpp.akira.qilin",
+          "extension": ".qilin",
+          "new_size": 4096,
+          "after_entropy": 7.9549,
+          "reason": "renamed_encrypted_target"
+        },
+        {
+          "rel_path": "generated_module_14.js.qilin.locked",
+          "extension": ".locked",
+          "new_size": 4096,
+          "after_entropy": 7.9608,
+          "reason": "renamed_encrypted_target"
+        },
+        {
+          "rel_path": "generated_module_15.cpp.qilin.akira",
+          "extension": ".akira",
+          "new_size": 4096,
+          "after_entropy": 7.954,
+          "reason": "renamed_encrypted_target"
+        },
+        {
+          "rel_path": "generated_module_16.cpp.qilin.locked",
+          "extension": ".locked",
+          "new_size": 4096,
+          "after_entropy": 7.9619,
+          "reason": "renamed_encrypted_target"
+        },
+        {
+          "rel_path": "generated_module_17.cpp.qilin.akira",
+          "extension": ".akira",
+          "new_size": 4096,
+          "after_entropy": 7.9429,
+          "reason": "renamed_encrypted_target"
+        },
+        {
+          "rel_path": "generated_module_19.js.qilin.locked",
+          "extension": ".locked",
+          "new_size": 4096,
+          "after_entropy": 7.9477,
+          "reason": "renamed_encrypted_target"
+        },
+        {
+          "rel_path": "generated_module_21.js.qilin.locked",
+          "extension": ".locked",
+          "new_size": 4096,
+          "after_entropy": 7.9523,
+          "reason": "renamed_encrypted_target"
+        },
+        {
+          "rel_path": "generated_module_22.cpp.akira.akira",
+          "extension": ".akira",
+          "new_size": 4096,
+          "after_entropy": 7.957,
+          "reason": "renamed_encrypted_target"
+        },
+        {
+          "rel_path": "generated_module_23.js.akira.qilin",
+          "extension": ".qilin",
+          "new_size": 4096,
+          "after_entropy": 7.9524,
+          "reason": "renamed_encrypted_target"
+        },
+        {
+          "rel_path": "generated_module_24.js.qilin.locked",
+          "extension": ".locked",
+          "new_size": 4096,
+          "after_entropy": 7.9529,
+          "reason": "renamed_encrypted_target"
+        },
+        {
+          "rel_path": "generated_module_25.cpp.qilin.qilin",
+          "extension": ".qilin",
+          "new_size": 4096,
+          "after_entropy": 7.9513,
+          "reason": "renamed_encrypted_target"
+        },
+        {
+          "rel_path": "generated_module_28.cpp.akira.locked",
+          "extension": ".locked",
+          "new_size": 4096,
+          "after_entropy": 7.9516,
+          "reason": "renamed_encrypted_target"
+        },
+        {
+          "rel_path": "generated_module_29.cpp.qilin.qilin",
+          "extension": ".qilin",
+          "new_size": 4096,
+          "after_entropy": 7.9561,
+          "reason": "renamed_encrypted_target"
+        }
+      ],
+      "replica": [
+        {
+          "rel_path": "generated_module_0.cpp.akira",
+          "extension": ".akira",
+          "size": 4096,
+          "entropy": 7.9519
+        },
+        {
+          "rel_path": "generated_module_1.cpp.locked",
+          "extension": ".locked",
+          "size": 4096,
+          "entropy": 7.9586
+        },
+        {
+          "rel_path": "generated_module_2.js.qilin",
+          "extension": ".qilin",
+          "size": 4096,
+          "entropy": 7.9552
+        },
+        {
+          "rel_path": "generated_module_3.cpp.locked",
+          "extension": ".locked",
+          "size": 4096,
+          "entropy": 7.9586
+        },
+        {
+          "rel_path": "generated_module_4.js.qilin",
+          "extension": ".qilin",
+          "size": 4096,
+          "entropy": 7.9624
+        },
+        {
+          "rel_path": "generated_module_6.cpp.akira",
+          "extension": ".akira",
+          "size": 4096,
+          "entropy": 7.9515
+        },
+        {
+          "rel_path": "generated_module_7.js.locked",
+          "extension": ".locked",
+          "size": 4096,
+          "entropy": 7.95
+        },
+        {
+          "rel_path": "generated_module_8.js.akira",
+          "extension": ".akira",
+          "size": 4096,
+          "entropy": 7.9527
+        },
+        {
+          "rel_path": "generated_module_9.js.locked",
+          "extension": ".locked",
+          "size": 4096,
+          "entropy": 7.9594
+        },
+        {
+          "rel_path": "generated_module_10.js.qilin",
+          "extension": ".qilin",
+          "size": 4096,
+          "entropy": 7.96
+        },
+        {
+          "rel_path": "generated_module_11.js.qilin",
+          "extension": ".qilin",
+          "size": 4096,
+          "entropy": 7.9451
+        },
+        {
+          "rel_path": "generated_module_13.js.qilin",
+          "extension": ".qilin",
+          "size": 4096,
+          "entropy": 7.9573
+        },
+        {
+          "rel_path": "generated_module_14.cpp.locked",
+          "extension": ".locked",
+          "size": 4096,
+          "entropy": 7.9484
+        },
+        {
+          "rel_path": "generated_module_15.js.akira",
+          "extension": ".akira",
+          "size": 4096,
+          "entropy": 7.9568
+        },
+        {
+          "rel_path": "generated_module_17.js.akira",
+          "extension": ".akira",
+          "size": 4096,
+          "entropy": 7.9545
+        },
+        {
+          "rel_path": "generated_module_18.cpp.akira",
+          "extension": ".akira",
+          "size": 4096,
+          "entropy": 7.9518
+        },
+        {
+          "rel_path": "generated_module_19.cpp.akira",
+          "extension": ".akira",
+          "size": 4096,
+          "entropy": 7.9599
+        },
+        {
+          "rel_path": "generated_module_20.cpp.qilin",
+          "extension": ".qilin",
+          "size": 4096,
+          "entropy": 7.9537
+        },
+        {
+          "rel_path": "generated_module_21.cpp.akira",
+          "extension": ".akira",
+          "size": 4096,
+          "entropy": 7.9504
+        },
+        {
+          "rel_path": "generated_module_22.js.qilin",
+          "extension": ".qilin",
+          "size": 4096,
+          "entropy": 7.9514
+        },
+        {
+          "rel_path": "generated_module_23.cpp.locked",
+          "extension": ".locked",
+          "size": 4096,
+          "entropy": 7.9621
+        },
+        {
+          "rel_path": "generated_module_24.cpp.akira",
+          "extension": ".akira",
+          "size": 4096,
+          "entropy": 7.9567
+        },
+        {
+          "rel_path": "generated_module_26.js.akira",
+          "extension": ".akira",
+          "size": 4096,
+          "entropy": 7.9536
+        },
+        {
+          "rel_path": "generated_module_27.js.akira",
+          "extension": ".akira",
+          "size": 4096,
+          "entropy": 7.952
+        },
+        {
+          "rel_path": "generated_module_28.cpp.qilin",
+          "extension": ".qilin",
+          "size": 4096,
+          "entropy": 7.9539
+        },
+        {
+          "rel_path": "generated_module_29.js.akira",
+          "extension": ".akira",
+          "size": 4096,
+          "entropy": 7.951
+        }
+      ]
+    }
+  },
+  "process_performance": {
+    "avg_cpu": 0.0,
+    "max_cpu": 0.0,
+    "avg_rss_mb": 0.0,
+    "max_rss_mb": 0.0
+  },
+  "evaluation_metrics": {
+    "confusion_matrix": {
+      "TP": 1,
+      "TN": 1,
+      "FP": 0,
+      "FN": 0
+    },
+    "performance": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "avg_detection_latency_ms": 593.98
+    }
+  }
+}

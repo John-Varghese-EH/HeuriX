@@ -2,6 +2,7 @@
 #include <chrono>
 #include <fstream>
 #include <filesystem>
+#include <iostream>
 #include <random>
 #include <sstream>
 #include <iomanip>
@@ -25,6 +26,7 @@ HeuristicEngine::HeuristicEngine(const EngineConfig& cfg) : config_(cfg) {
     for (const auto& ext : exts) {
         blacklist_exts_.insert(ext);
     }
+    update_config(cfg);
 }
 
 void HeuristicEngine::register_canary(const std::string& path, std::vector<uint8_t> hash) {
@@ -33,6 +35,17 @@ void HeuristicEngine::register_canary(const std::string& path, std::vector<uint8
 
 void HeuristicEngine::update_config(const EngineConfig& cfg) {
     config_ = cfg;
+    if (config_.enable_feature_logging && !config_.feature_log_path.empty()) {
+        feature_logger_.open(config_.feature_log_path, config_.feature_log_label);
+    }
+    if (config_.enable_ml && !config_.ml_model_path.empty()) {
+        std::string err = ml_model_.load(config_.ml_model_path);
+        if (!err.empty()) {
+            std::cerr << "[ML] Failed to load model: " << err << std::endl;
+        } else {
+            std::cerr << "[ML] Loaded Random Forest model from " << config_.ml_model_path << std::endl;
+        }
+    }
 }
 
 bool HeuristicEngine::is_safelisted(const std::string& path) const {
@@ -200,6 +213,26 @@ std::string HeuristicEngine::generate_canary_content(size_t length) {
 
 std::optional<Alert> HeuristicEngine::analyze(const FsEvent& event) {
     uint64_t now = event.timestamp_ms;
+
+    // Feature Extraction & Logging
+    FeatureVector features = feature_extractor_.extract(event);
+    if (config_.enable_feature_logging && feature_logger_.is_open()) {
+        feature_logger_.write(now, features);
+    }
+
+    // ML Model Evaluation
+    if (config_.enable_ml && ml_model_.loaded()) {
+        double ml_prob = ml_model_.predict(features);
+        if (ml_prob >= config_.ml_threshold) {
+            Alert a;
+            a.severity = ml_prob > 0.95 ? Severity::critical : Severity::high;
+            a.description = "ML Random Forest ransomware alert (prob=" + std::to_string(static_cast<int>(ml_prob * 100)) + "%)";
+            a.timestamp_ms = now;
+            a.threat_score = ml_prob * 100.0;
+            current_threat_score_ = std::max(current_threat_score_, a.threat_score);
+            return a;
+        }
+    }
 
     // 1. Canary modification - critical (also caught by periodic verify_canaries)
     if (canaries_.find(event.path) != canaries_.end()) {

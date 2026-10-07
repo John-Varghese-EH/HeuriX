@@ -23,9 +23,6 @@
   },
   "bundle": {
     "active": true,
-    "targets": "all",
-    "externalBin": [
-      "binaries/heurix-engine"
-    ]
+    "targets": "all"
   }
 }

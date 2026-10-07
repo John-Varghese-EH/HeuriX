@@ -73,10 +73,10 @@ export default function App() {
     });
     useTauriEvent('heurix://status', (payload) => {
         const newStatus = payload.data.status;
-        if (newStatus === 'started' || newStatus === 'running') {
+        if (newStatus === 'started' || newStatus === 'running' || newStatus === 'connected') {
             setStatus('running');
         }
-        else if (newStatus === 'stopped' || newStatus === 'terminated') {
+        else if (newStatus === 'stopped' || newStatus === 'terminated' || newStatus === 'disconnected') {
             setStatus('stopped');
         }
         else if (newStatus === 'heartbeat') {

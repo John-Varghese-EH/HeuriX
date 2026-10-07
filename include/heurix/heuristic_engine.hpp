@@ -1,5 +1,7 @@
 #pragma once
 #include "types.hpp"
+#include "features.hpp"
+#include "ml_model.hpp"
 #include <optional>
 #include <deque>
 #include <string>
@@ -24,6 +26,7 @@ public:
     void update_config(const EngineConfig& cfg);
 
     double current_threat_score() const { return current_threat_score_; }
+    bool is_ml_active() const { return ml_model_.loaded(); }
 
 private:
     EngineConfig config_;
@@ -35,6 +38,10 @@ private:
     std::unordered_map<std::string, std::vector<uint8_t>> canaries_;
     std::set<std::string> deployed_canary_paths_;
     double current_threat_score_ = 0.0;
+
+    FeatureExtractor feature_extractor_;
+    RandomForestModel ml_model_;
+    FeatureLogger feature_logger_;
 
     bool is_safelisted(const std::string& path) const;
     double file_entropy_quick(const std::string& path) const;

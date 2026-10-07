@@ -1,1 +1,1 @@
-{"default":{"identifier":"default","description":"HeuriX default capabilities","local":true,"windows":["main"],"permissions":["core:default","core:window:default","core:event:default","shell:allow-spawn","shell:allow-stdin-write","shell:default","store:default"]}}
+{"default":{"identifier":"default","description":"HeuriX default capabilities","local":true,"windows":["main"],"permissions":["core:default","core:window:default","core:event:default","store:default"]}}

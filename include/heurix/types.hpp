@@ -133,9 +133,18 @@ struct EngineConfig {
     int burst_count = 15;
     int burst_window_ms = 2000;
     bool auto_kill = false;
+    bool auto_mitigate = true;
     std::string mitigation_action = "suspend"; // suspend|terminate|quarantine|isolate
     std::vector<std::string> safelist;
     std::vector<std::string> canary_files;
     int burst_rename_count = 10;
     int entropy_cascade_count = 5;
+
+    // Machine Learning Heuristics
+    bool enable_ml = false;
+    std::string ml_model_path;
+    double ml_threshold = 0.85;
+    bool enable_feature_logging = false;
+    std::string feature_log_path;
+    std::string feature_log_label;
 };

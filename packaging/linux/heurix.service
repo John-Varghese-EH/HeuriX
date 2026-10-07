@@ -1,0 +1,19 @@
+[Unit]
+Description=HeuriX Ransomware Detection Engine
+After=network.target
+
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/local/bin/heurix-engine --watch /home --auto-kill true
+Restart=on-failure
+RestartSec=5
+# Hardening options to protect the daemon
+ProtectSystem=full
+ProtectHome=read-only
+NoNewPrivileges=yes
+CapabilityBoundingSet=CAP_SYS_PTRACE CAP_DAC_READ_SEARCH CAP_KILL
+AmbientCapabilities=CAP_SYS_PTRACE CAP_DAC_READ_SEARCH CAP_KILL
+
+[Install]
+WantedBy=multi-user.target
