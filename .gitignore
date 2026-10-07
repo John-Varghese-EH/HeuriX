@@ -16,6 +16,10 @@ CMakeFiles/
 cmake_install.cmake
 Makefile
 compile_commands.json
+*.o
+*.a
+*.so
+*.dylib
 
 # IDEs / OS
 .vscode/
@@ -23,7 +27,17 @@ compile_commands.json
 .DS_Store
 Thumbs.db
 
-# Project specifics
+# Project & Benchmark Artifacts
 canary/
+test_sandbox/
 *.log
-/re
+benchmark_results/
+model.hxrf1
+
+# 
+re/
+
+# Python Cache
+__pycache__/
+*.pyc
+

@@ -158,11 +158,11 @@ export function ConfigPanel({ theme, setTheme, watchDir, setWatchDir, onRestartE
           <div className="hx-radio-group" style={{ gridTemplateColumns: 'repeat(2, 1fr)' }}>
             <div className="hx-radio-card" data-active={mitigation === 'suspend'} onClick={() => setMitigation('suspend')}>
               <div className="hx-radio-title">Suspend Process</div>
-              <div className="hx-radio-desc">SIGSTOP — pause offending process for manual review.</div>
+              <div className="hx-radio-desc">SIGSTOP: pause offending process for manual review.</div>
             </div>
             <div className="hx-radio-card" data-active={mitigation === 'terminate'} onClick={() => setMitigation('terminate')}>
               <div className="hx-radio-title">Terminate Process</div>
-              <div className="hx-radio-desc">SIGTERM → SIGKILL — destroy the offending process.</div>
+              <div className="hx-radio-desc">SIGTERM -> SIGKILL: destroy the offending process.</div>
             </div>
             <div className="hx-radio-card" data-active={mitigation === 'quarantine'} onClick={() => setMitigation('quarantine')}>
               <div className="hx-radio-title">Quarantine File</div>

@@ -1,0 +1,73 @@
+<svg width="780" height="420" viewBox="0 0 780 420" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font-family: system-ui, -apple-system, sans-serif; font-size: 20px; font-weight: 700; fill: #1e293b; }
+      .subtitle { font-family: system-ui, -apple-system, sans-serif; font-size: 13px; fill: #64748b; }
+      .axis-lbl { font-family: system-ui, -apple-system, sans-serif; font-size: 12px; font-weight: 600; fill: #475569; }
+      .bar-val { font-family: system-ui, -apple-system, sans-serif; font-size: 11px; font-weight: 700; fill: #0f172a; }
+    </style>
+  </defs>
+
+  <rect width="780" height="420" rx="16" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="32" y="44" class="title">Format Spectrum Profile</text>
+  <text x="32" y="66" class="subtitle">File Preservation Ratios Across Specific Extension Classes</text>
+
+  <!-- Grid lines -->
+  <line x1="80" y1="120" x2="720" y2="120" stroke="#f1f5f9" stroke-width="1.5"/>
+  <line x1="80" y1="180" x2="720" y2="180" stroke="#f1f5f9" stroke-width="1.5"/>
+  <line x1="80" y1="240" x2="720" y2="240" stroke="#f1f5f9" stroke-width="1.5"/>
+  <line x1="80" y1="300" x2="720" y2="300" stroke="#f1f5f9" stroke-width="1.5"/>
+
+  <!-- Y Axis Labels -->
+  <text x="65" y="124" text-anchor="end" class="axis-lbl">100%</text>
+  <text x="65" y="184" text-anchor="end" class="axis-lbl">75%</text>
+  <text x="65" y="244" text-anchor="end" class="axis-lbl">50%</text>
+  <text x="65" y="304" text-anchor="end" class="axis-lbl">25%</text>
+
+  <!-- Bars -->
+  <!-- .docx -->
+  <g transform="translate(120, 0)">
+    <rect x="0" y="120" width="56" height="210" rx="6" fill="#10b981"/>
+    <text x="28" y="112" text-anchor="middle" class="bar-val">100%</text>
+    <text x="28" y="354" text-anchor="middle" class="axis-lbl">.docx</text>
+  </g>
+
+  <!-- .pdf -->
+  <g transform="translate(220, 0)">
+    <rect x="0" y="120" width="56" height="210" rx="6" fill="#10b981"/>
+    <text x="28" y="112" text-anchor="middle" class="bar-val">100%</text>
+    <text x="28" y="354" text-anchor="middle" class="axis-lbl">.pdf</text>
+  </g>
+
+  <!-- .cpp / Source -->
+  <g transform="translate(320, 0)">
+    <rect x="0" y="120" width="56" height="210" rx="6" fill="#10b981"/>
+    <text x="28" y="112" text-anchor="middle" class="bar-val">100%</text>
+    <text x="28" y="354" text-anchor="middle" class="axis-lbl">.cpp</text>
+  </g>
+
+  <!-- .rs / Source -->
+  <g transform="translate(420, 0)">
+    <rect x="0" y="120" width="56" height="210" rx="6" fill="#10b981"/>
+    <text x="28" y="112" text-anchor="middle" class="bar-val">100%</text>
+    <text x="28" y="354" text-anchor="middle" class="axis-lbl">.rs</text>
+  </g>
+
+  <!-- .zip / Archives -->
+  <g transform="translate(520, 0)">
+    <rect x="0" y="126" width="56" height="204" rx="6" fill="#10b981"/>
+    <rect x="0" y="120" width="56" height="6" rx="2" fill="#ef4444"/>
+    <text x="28" y="112" text-anchor="middle" class="bar-val">97.2%</text>
+    <text x="28" y="354" text-anchor="middle" class="axis-lbl">.zip</text>
+  </g>
+
+  <!-- .vmdk / ESXi Datastores -->
+  <g transform="translate(620, 0)">
+    <rect x="0" y="120" width="56" height="210" rx="6" fill="#10b981"/>
+    <text x="28" y="112" text-anchor="middle" class="bar-val">100%</text>
+    <text x="28" y="354" text-anchor="middle" class="axis-lbl">.vmdk</text>
+  </g>
+
+  <!-- Baseline Axis line -->
+  <line x1="80" y1="330" x2="720" y2="330" stroke="#cbd5e1" stroke-width="2"/>
+</svg>

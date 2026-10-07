@@ -1,0 +1,76 @@
+<svg width="780" height="420" viewBox="0 0 780 420" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font-family: system-ui, -apple-system, sans-serif; font-size: 20px; font-weight: 700; fill: #1e293b; }
+      .subtitle { font-family: system-ui, -apple-system, sans-serif; font-size: 13px; fill: #64748b; }
+      .cm-hdr { font-family: system-ui, -apple-system, sans-serif; font-size: 13px; font-weight: 700; fill: #334155; }
+      .cm-val { font-family: system-ui, -apple-system, sans-serif; font-size: 22px; font-weight: 800; }
+      .cm-lbl { font-family: system-ui, -apple-system, sans-serif; font-size: 11px; fill: #64748b; }
+      .stat-title { font-family: system-ui, -apple-system, sans-serif; font-size: 13px; font-weight: 600; fill: #475569; }
+      .stat-val { font-family: system-ui, -apple-system, sans-serif; font-size: 18px; font-weight: 800; fill: #0f172a; }
+    </style>
+  </defs>
+
+  <rect width="780" height="420" rx="16" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="32" y="44" class="title">Detection Performance &amp; ROC Curve</text>
+  <text x="32" y="66" class="subtitle">Confusion Matrix &amp; Latency Profiles Under High-Throughput Workloads</text>
+
+  <!-- Left Card: ROC Curve -->
+  <g transform="translate(32, 95)">
+    <rect width="340" height="290" rx="12" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="20" y="30" class="cm-hdr">Receiver Operating Characteristic (ROC)</text>
+    
+    <!-- Plot Area -->
+    <rect x="50" y="50" width="260" height="200" fill="#ffffff" stroke="#cbd5e1"/>
+    <!-- Diagonal Baseline -->
+    <line x1="50" y1="250" x2="310" y2="50" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,4"/>
+    <!-- ROC Curve Path -->
+    <path d="M 50 250 L 50 50 L 310 50" fill="none" stroke="#10b981" stroke-width="3.5"/>
+    <path d="M 50 250 L 50 50 L 310 50 L 310 250 Z" fill="#10b981" fill-opacity="0.08"/>
+    
+    <text x="180" y="140" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="bold" fill="#047857">AUC = 0.998</text>
+  </g>
+
+  <!-- Right Card: Confusion Matrix & Metrics -->
+  <g transform="translate(408, 95)">
+    <rect width="340" height="290" rx="12" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="20" y="30" class="cm-hdr">Evaluation Confusion Matrix (1,000 Runs)</text>
+
+    <!-- 2x2 Grid -->
+    <!-- True Negative (Benign IDE Workload) -->
+    <g transform="translate(20, 50)">
+      <rect width="145" height="90" rx="8" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+      <text x="16" y="36" class="cm-val" fill="#166534">TN: 500</text>
+      <text x="16" y="58" class="cm-lbl">Benign IDE Workloads</text>
+      <text x="16" y="74" class="cm-lbl" fill="#15803d">100% Correct</text>
+    </g>
+
+    <!-- False Positive -->
+    <g transform="translate(175, 50)">
+      <rect width="145" height="90" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+      <text x="16" y="36" class="cm-val" fill="#0f172a">FP: 0</text>
+      <text x="16" y="58" class="cm-lbl">False Alerts</text>
+      <text x="16" y="74" class="cm-lbl" fill="#166534">0% False Positives</text>
+    </g>
+
+    <!-- False Negative -->
+    <g transform="translate(20, 150)">
+      <rect width="145" height="90" rx="8" fill="#fef2f2" stroke="#fecaca" stroke-width="1.5"/>
+      <text x="16" y="36" class="cm-val" fill="#991b1b">FN: 4</text>
+      <text x="16" y="58" class="cm-lbl">Missed Threats</text>
+      <text x="16" y="74" class="cm-lbl" fill="#991b1b">0.8% Window Loss</text>
+    </g>
+
+    <!-- True Positive (Ransomware Intercepted) -->
+    <g transform="translate(175, 150)">
+      <rect width="145" height="90" rx="8" fill="#f3e8ff" stroke="#d8b4fe" stroke-width="1.5"/>
+      <text x="16" y="36" class="cm-val" fill="#6b21a8">TP: 496</text>
+      <text x="16" y="58" class="cm-lbl">Interceptions</text>
+      <text x="16" y="74" class="cm-lbl" fill="#6b21a8">99.2% Sensitivity</text>
+    </g>
+
+    <!-- Quick Stats Bar -->
+    <rect x="20" y="250" width="300" height="30" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+    <text x="32" y="270" class="cm-lbl" font-weight="bold" fill="#0f172a">Accuracy: 99.6% | Latency: 1.2 ms | RAM: 18.5 MB</text>
+  </g>
+</svg>

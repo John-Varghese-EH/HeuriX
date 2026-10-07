@@ -26,7 +26,7 @@ HeuriX leverages a multi-layered detection strategy encompassing Shannon entropy
 The proliferation of ransomware-as-a-service (RaaS) has accelerated the deployment of sophisticated cryptographic malware. Families such as WannaCry, REvil, and LockBit have demonstrated devastating efficacy against both enterprise and consumer endpoints. These threats typically operate by infiltrating a system, enumerating target files, and rapidly encrypting them using robust cryptographic algorithms (e.g., AES-256 combined with RSA-2048).
 
 ### 2.2 Limitations of Signature-Based AV
-Traditional antivirus (AV) systems rely heavily on static signatures—unique byte sequences identifying known malware. While effective against historic threats, this paradigm suffers from "zero-day blindness." Polymorphic and metamorphic engines allow ransomware to alter its binary structure on every iteration, easily bypassing signature checks. Furthermore, legitimate administrative tools (e.g., PsExec, WMI) are frequently weaponized ("living off the land"), rendering static analysis impotent.
+Traditional antivirus (AV) systems rely heavily on static signatures: unique byte sequences identifying known malware. While effective against historic threats, this paradigm suffers from "zero-day blindness." Polymorphic and metamorphic engines allow ransomware to alter its binary structure on every iteration, easily bypassing signature checks. Furthermore, legitimate administrative tools (e.g., PsExec, WMI) are frequently weaponized ("living off the land"), rendering static analysis impotent.
 
 ### 2.3 Review of Behavioral Detection Approaches
 To address these limitations, several behavioral detection frameworks have been proposed in academia:

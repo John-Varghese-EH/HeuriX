@@ -10,7 +10,7 @@
 
 HeuriX is an advanced, cross-platform host-intrusion detection system (HIDS) specifically engineered to detect and neutralize zero-day ransomware threats. Traditional signature-based antivirus solutions fundamentally fail against modern, polymorphic ransomware strains that generate unique binaries for every attack. 
 
-HeuriX addresses this vulnerability by discarding signature scanning entirely. Instead, it relies on a high-performance, deterministic behavioral heuristic engine written in C++20. By monitoring filesystem telemetry at the kernel level, HeuriX identifies the mathematical and behavioral signatures of cryptographic extortion—halting malicious processes before catastrophic data loss occurs.
+HeuriX addresses this vulnerability by discarding signature scanning entirely. Instead, it relies on a high-performance, deterministic behavioral heuristic engine written in C++20. By monitoring filesystem telemetry at the kernel level, HeuriX identifies the mathematical and behavioral signatures of cryptographic extortion, halting malicious processes before catastrophic data loss occurs.
 
 ## Technical Architecture
 

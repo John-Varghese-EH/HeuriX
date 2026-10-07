@@ -1,606 +1,252 @@
 {
-  "safari_profile": {
+  "heurix_state_profile": {
     "metadata": {
-      "root_directory": "/home/j0x/Documents/GitHub/HeuriX/test_sandbox",
-      "total_baseline_files": 30,
-      "total_post_files": 60,
-      "pristine_count": 8,
-      "lost_count": 44,
-      "replica_count": 26,
-      "pristine_ratio": 0.2667,
-      "lost_ratio": 1.4667,
-      "replica_ratio": 0.8667
+      "root_directory": "/tmp/heurix_test_sandbox",
+      "total_baseline_files": 60,
+      "total_post_files": 80,
+      "pristine_count": 37,
+      "lost_count": 23,
+      "replica_count": 43,
+      "pristine_ratio": 0.6167,
+      "lost_ratio": 0.3833,
+      "replica_ratio": 0.7167
     },
     "folder_summary": {
-      "root": {
-        "pristine": 8,
-        "lost": 44,
-        "replica": 26
+      "Documents": {
+        "pristine": 7,
+        "lost": 6,
+        "replica": 6
+      },
+      "Desktop": {
+        "pristine": 9,
+        "lost": 7,
+        "replica": 7
+      },
+      "Downloads": {
+        "pristine": 10,
+        "lost": 3,
+        "replica": 3
+      },
+      "SourceCode": {
+        "pristine": 11,
+        "lost": 7,
+        "replica": 27
       }
     },
     "format_summary": {
+      ".xlsx": {
+        "pristine": 7,
+        "lost": 5,
+        "replica": 0
+      },
+      ".zip": {
+        "pristine": 5,
+        "lost": 2,
+        "replica": 0
+      },
+      ".py": {
+        "pristine": 7,
+        "lost": 3,
+        "replica": 0
+      },
+      ".png": {
+        "pristine": 3,
+        "lost": 1,
+        "replica": 0
+      },
+      ".docx": {
+        "pristine": 4,
+        "lost": 3,
+        "replica": 0
+      },
+      ".pdf": {
+        "pristine": 2,
+        "lost": 4,
+        "replica": 0
+      },
+      ".cpp": {
+        "pristine": 5,
+        "lost": 1,
+        "replica": 2
+      },
+      ".hpp": {
+        "pristine": 2,
+        "lost": 1,
+        "replica": 1
+      },
+      ".js": {
+        "pristine": 2,
+        "lost": 3,
+        "replica": 4
+      },
       ".locked": {
-        "pristine": 8,
-        "lost": 11,
-        "replica": 6
-      },
-      ".qilin": {
         "pristine": 0,
-        "lost": 18,
-        "replica": 8
+        "lost": 0,
+        "replica": 30
       },
-      ".akira": {
+      ".json": {
         "pristine": 0,
-        "lost": 15,
-        "replica": 12
+        "lost": 0,
+        "replica": 3
+      },
+      ".ts": {
+        "pristine": 0,
+        "lost": 0,
+        "replica": 3
       }
     },
-    "details": {
+    "raw_details": {
       "pristine": [
-        {
-          "rel_path": "generated_module_1.js.locked",
-          "extension": ".locked",
-          "size": 4096,
-          "entropy": 7.9573
-        },
-        {
-          "rel_path": "generated_module_6.js.locked",
-          "extension": ".locked",
-          "size": 4096,
-          "entropy": 7.9513
-        },
-        {
-          "rel_path": "generated_module_10.cpp.locked",
-          "extension": ".locked",
-          "size": 4096,
-          "entropy": 7.951
-        },
-        {
-          "rel_path": "generated_module_11.js.locked",
-          "extension": ".locked",
-          "size": 4096,
-          "entropy": 7.9594
-        },
-        {
-          "rel_path": "generated_module_18.js.locked",
-          "extension": ".locked",
-          "size": 4096,
-          "entropy": 7.9585
-        },
-        {
-          "rel_path": "generated_module_20.js.locked",
-          "extension": ".locked",
-          "size": 4096,
-          "entropy": 7.9612
-        },
-        {
-          "rel_path": "generated_module_26.js.locked",
-          "extension": ".locked",
-          "size": 4096,
-          "entropy": 7.9521
-        },
-        {
-          "rel_path": "generated_module_27.js.locked",
-          "extension": ".locked",
-          "size": 4096,
-          "entropy": 7.9494
-        }
+        "/tmp/heurix_test_sandbox/Documents/Projects/file_051.xlsx",
+        "/tmp/heurix_test_sandbox/Documents/Projects/file_047.zip",
+        "/tmp/heurix_test_sandbox/Documents/Projects/file_040.py",
+        "/tmp/heurix_test_sandbox/Documents/Projects/file_036.png",
+        "/tmp/heurix_test_sandbox/Documents/Projects/file_023.png",
+        "/tmp/heurix_test_sandbox/Documents/Projects/file_012.py",
+        "/tmp/heurix_test_sandbox/Documents/Projects/file_009.docx",
+        "/tmp/heurix_test_sandbox/Desktop/Financials/file_059.pdf",
+        "/tmp/heurix_test_sandbox/Desktop/Financials/file_056.xlsx",
+        "/tmp/heurix_test_sandbox/Desktop/Financials/file_048.py",
+        "/tmp/heurix_test_sandbox/Desktop/Financials/file_038.zip",
+        "/tmp/heurix_test_sandbox/Desktop/Financials/file_029.xlsx",
+        "/tmp/heurix_test_sandbox/Desktop/Financials/file_028.xlsx",
+        "/tmp/heurix_test_sandbox/Desktop/Financials/file_027.py",
+        "/tmp/heurix_test_sandbox/Desktop/Financials/file_026.cpp",
+        "/tmp/heurix_test_sandbox/Desktop/Financials/file_016.zip",
+        "/tmp/heurix_test_sandbox/Downloads/Archives/file_049.xlsx",
+        "/tmp/heurix_test_sandbox/Downloads/Archives/file_046.py",
+        "/tmp/heurix_test_sandbox/Downloads/Archives/file_042.hpp",
+        "/tmp/heurix_test_sandbox/Downloads/Archives/file_041.cpp",
+        "/tmp/heurix_test_sandbox/Downloads/Archives/file_037.py",
+        "/tmp/heurix_test_sandbox/Downloads/Archives/file_018.cpp",
+        "/tmp/heurix_test_sandbox/Downloads/Archives/file_013.png",
+        "/tmp/heurix_test_sandbox/Downloads/Archives/file_007.cpp",
+        "/tmp/heurix_test_sandbox/Downloads/Archives/file_003.zip",
+        "/tmp/heurix_test_sandbox/Downloads/Archives/file_002.zip",
+        "/tmp/heurix_test_sandbox/SourceCode/src/file_058.xlsx",
+        "/tmp/heurix_test_sandbox/SourceCode/src/file_055.docx",
+        "/tmp/heurix_test_sandbox/SourceCode/src/file_053.xlsx",
+        "/tmp/heurix_test_sandbox/SourceCode/src/file_052.js",
+        "/tmp/heurix_test_sandbox/SourceCode/src/file_035.docx",
+        "/tmp/heurix_test_sandbox/SourceCode/src/file_033.hpp",
+        "/tmp/heurix_test_sandbox/SourceCode/src/file_031.js",
+        "/tmp/heurix_test_sandbox/SourceCode/src/file_030.pdf",
+        "/tmp/heurix_test_sandbox/SourceCode/src/file_022.docx",
+        "/tmp/heurix_test_sandbox/SourceCode/src/file_019.cpp",
+        "/tmp/heurix_test_sandbox/SourceCode/src/file_005.py"
       ],
       "lost": [
-        {
-          "rel_path": "generated_module_0.cpp.qilin",
-          "extension": ".qilin",
-          "original_size": 4096,
-          "before_entropy": 7.9563,
-          "after_entropy": 0.0,
-          "reason": "deleted_or_renamed"
-        },
-        {
-          "rel_path": "generated_module_2.js.akira",
-          "extension": ".akira",
-          "original_size": 4096,
-          "before_entropy": 7.9559,
-          "after_entropy": 0.0,
-          "reason": "deleted_or_renamed"
-        },
-        {
-          "rel_path": "generated_module_3.js.qilin",
-          "extension": ".qilin",
-          "original_size": 4096,
-          "before_entropy": 7.9506,
-          "after_entropy": 0.0,
-          "reason": "deleted_or_renamed"
-        },
-        {
-          "rel_path": "generated_module_4.js.akira",
-          "extension": ".akira",
-          "original_size": 4096,
-          "before_entropy": 7.9552,
-          "after_entropy": 0.0,
-          "reason": "deleted_or_renamed"
-        },
-        {
-          "rel_path": "generated_module_5.js.akira",
-          "extension": ".akira",
-          "original_size": 4096,
-          "new_size": 4096,
-          "before_entropy": 7.9491,
-          "after_entropy": 7.9586,
-          "reason": "modified_hash"
-        },
-        {
-          "rel_path": "generated_module_7.js.akira",
-          "extension": ".akira",
-          "original_size": 4096,
-          "before_entropy": 7.9539,
-          "after_entropy": 0.0,
-          "reason": "deleted_or_renamed"
-        },
-        {
-          "rel_path": "generated_module_8.js.qilin",
-          "extension": ".qilin",
-          "original_size": 4096,
-          "before_entropy": 7.9539,
-          "after_entropy": 0.0,
-          "reason": "deleted_or_renamed"
-        },
-        {
-          "rel_path": "generated_module_9.js.qilin",
-          "extension": ".qilin",
-          "original_size": 4096,
-          "before_entropy": 7.9553,
-          "after_entropy": 0.0,
-          "reason": "deleted_or_renamed"
-        },
-        {
-          "rel_path": "generated_module_12.js.qilin",
-          "extension": ".qilin",
-          "original_size": 4096,
-          "new_size": 4096,
-          "before_entropy": 7.952,
-          "after_entropy": 7.9558,
-          "reason": "modified_hash"
-        },
-        {
-          "rel_path": "generated_module_13.cpp.akira",
-          "extension": ".akira",
-          "original_size": 4096,
-          "before_entropy": 7.9586,
-          "after_entropy": 0.0,
-          "reason": "deleted_or_renamed"
-        },
-        {
-          "rel_path": "generated_module_14.js.qilin",
-          "extension": ".qilin",
-          "original_size": 4096,
-          "before_entropy": 7.9584,
-          "after_entropy": 0.0,
-          "reason": "deleted_or_renamed"
-        },
-        {
-          "rel_path": "generated_module_15.cpp.qilin",
-          "extension": ".qilin",
-          "original_size": 4096,
-          "before_entropy": 7.9529,
-          "after_entropy": 0.0,
-          "reason": "deleted_or_renamed"
-        },
-        {
-          "rel_path": "generated_module_16.cpp.qilin",
-          "extension": ".qilin",
-          "original_size": 4096,
-          "new_size": 4096,
-          "before_entropy": 7.9562,
-          "after_entropy": 7.9595,
-          "reason": "modified_hash"
-        },
-        {
-          "rel_path": "generated_module_17.cpp.qilin",
-          "extension": ".qilin",
-          "original_size": 4096,
-          "before_entropy": 7.9566,
-          "after_entropy": 0.0,
-          "reason": "deleted_or_renamed"
-        },
-        {
-          "rel_path": "generated_module_19.js.qilin",
-          "extension": ".qilin",
-          "original_size": 4096,
-          "before_entropy": 7.951,
-          "after_entropy": 0.0,
-          "reason": "deleted_or_renamed"
-        },
-        {
-          "rel_path": "generated_module_21.js.qilin",
-          "extension": ".qilin",
-          "original_size": 4096,
-          "before_entropy": 7.9549,
-          "after_entropy": 0.0,
-          "reason": "deleted_or_renamed"
-        },
-        {
-          "rel_path": "generated_module_22.cpp.akira",
-          "extension": ".akira",
-          "original_size": 4096,
-          "before_entropy": 7.9529,
-          "after_entropy": 0.0,
-          "reason": "deleted_or_renamed"
-        },
-        {
-          "rel_path": "generated_module_23.js.akira",
-          "extension": ".akira",
-          "original_size": 4096,
-          "before_entropy": 7.9488,
-          "after_entropy": 0.0,
-          "reason": "deleted_or_renamed"
-        },
-        {
-          "rel_path": "generated_module_24.js.qilin",
-          "extension": ".qilin",
-          "original_size": 4096,
-          "before_entropy": 7.9512,
-          "after_entropy": 0.0,
-          "reason": "deleted_or_renamed"
-        },
-        {
-          "rel_path": "generated_module_25.cpp.qilin",
-          "extension": ".qilin",
-          "original_size": 4096,
-          "new_size": 4096,
-          "before_entropy": 7.9498,
-          "after_entropy": 7.9598,
-          "reason": "modified_hash"
-        },
-        {
-          "rel_path": "generated_module_28.cpp.akira",
-          "extension": ".akira",
-          "original_size": 4096,
-          "before_entropy": 7.9482,
-          "after_entropy": 0.0,
-          "reason": "deleted_or_renamed"
-        },
-        {
-          "rel_path": "generated_module_29.cpp.qilin",
-          "extension": ".qilin",
-          "original_size": 4096,
-          "before_entropy": 7.9605,
-          "after_entropy": 0.0,
-          "reason": "deleted_or_renamed"
-        },
-        {
-          "rel_path": "generated_module_0.cpp.qilin.akira",
-          "extension": ".akira",
-          "new_size": 4096,
-          "after_entropy": 7.9565,
-          "reason": "renamed_encrypted_target"
-        },
-        {
-          "rel_path": "generated_module_2.js.akira.locked",
-          "extension": ".locked",
-          "new_size": 4096,
-          "after_entropy": 7.9523,
-          "reason": "renamed_encrypted_target"
-        },
-        {
-          "rel_path": "generated_module_3.js.qilin.locked",
-          "extension": ".locked",
-          "new_size": 4096,
-          "after_entropy": 7.9608,
-          "reason": "renamed_encrypted_target"
-        },
-        {
-          "rel_path": "generated_module_4.js.akira.locked",
-          "extension": ".locked",
-          "new_size": 4096,
-          "after_entropy": 7.9591,
-          "reason": "renamed_encrypted_target"
-        },
-        {
-          "rel_path": "generated_module_5.js.akira.akira",
-          "extension": ".akira",
-          "new_size": 4096,
-          "after_entropy": 7.9482,
-          "reason": "renamed_encrypted_target"
-        },
-        {
-          "rel_path": "generated_module_7.js.akira.akira",
-          "extension": ".akira",
-          "new_size": 4096,
-          "after_entropy": 7.9544,
-          "reason": "renamed_encrypted_target"
-        },
-        {
-          "rel_path": "generated_module_8.js.qilin.locked",
-          "extension": ".locked",
-          "new_size": 4096,
-          "after_entropy": 7.9546,
-          "reason": "renamed_encrypted_target"
-        },
-        {
-          "rel_path": "generated_module_9.js.qilin.akira",
-          "extension": ".akira",
-          "new_size": 4096,
-          "after_entropy": 7.9584,
-          "reason": "renamed_encrypted_target"
-        },
-        {
-          "rel_path": "generated_module_12.js.qilin.locked",
-          "extension": ".locked",
-          "new_size": 4096,
-          "after_entropy": 7.9515,
-          "reason": "renamed_encrypted_target"
-        },
-        {
-          "rel_path": "generated_module_13.cpp.akira.qilin",
-          "extension": ".qilin",
-          "new_size": 4096,
-          "after_entropy": 7.9549,
-          "reason": "renamed_encrypted_target"
-        },
-        {
-          "rel_path": "generated_module_14.js.qilin.locked",
-          "extension": ".locked",
-          "new_size": 4096,
-          "after_entropy": 7.9608,
-          "reason": "renamed_encrypted_target"
-        },
-        {
-          "rel_path": "generated_module_15.cpp.qilin.akira",
-          "extension": ".akira",
-          "new_size": 4096,
-          "after_entropy": 7.954,
-          "reason": "renamed_encrypted_target"
-        },
-        {
-          "rel_path": "generated_module_16.cpp.qilin.locked",
-          "extension": ".locked",
-          "new_size": 4096,
-          "after_entropy": 7.9619,
-          "reason": "renamed_encrypted_target"
-        },
-        {
-          "rel_path": "generated_module_17.cpp.qilin.akira",
-          "extension": ".akira",
-          "new_size": 4096,
-          "after_entropy": 7.9429,
-          "reason": "renamed_encrypted_target"
-        },
-        {
-          "rel_path": "generated_module_19.js.qilin.locked",
-          "extension": ".locked",
-          "new_size": 4096,
-          "after_entropy": 7.9477,
-          "reason": "renamed_encrypted_target"
-        },
-        {
-          "rel_path": "generated_module_21.js.qilin.locked",
-          "extension": ".locked",
-          "new_size": 4096,
-          "after_entropy": 7.9523,
-          "reason": "renamed_encrypted_target"
-        },
-        {
-          "rel_path": "generated_module_22.cpp.akira.akira",
-          "extension": ".akira",
-          "new_size": 4096,
-          "after_entropy": 7.957,
-          "reason": "renamed_encrypted_target"
-        },
-        {
-          "rel_path": "generated_module_23.js.akira.qilin",
-          "extension": ".qilin",
-          "new_size": 4096,
-          "after_entropy": 7.9524,
-          "reason": "renamed_encrypted_target"
-        },
-        {
-          "rel_path": "generated_module_24.js.qilin.locked",
-          "extension": ".locked",
-          "new_size": 4096,
-          "after_entropy": 7.9529,
-          "reason": "renamed_encrypted_target"
-        },
-        {
-          "rel_path": "generated_module_25.cpp.qilin.qilin",
-          "extension": ".qilin",
-          "new_size": 4096,
-          "after_entropy": 7.9513,
-          "reason": "renamed_encrypted_target"
-        },
-        {
-          "rel_path": "generated_module_28.cpp.akira.locked",
-          "extension": ".locked",
-          "new_size": 4096,
-          "after_entropy": 7.9516,
-          "reason": "renamed_encrypted_target"
-        },
-        {
-          "rel_path": "generated_module_29.cpp.qilin.qilin",
-          "extension": ".qilin",
-          "new_size": 4096,
-          "after_entropy": 7.9561,
-          "reason": "renamed_encrypted_target"
-        }
+        "/tmp/heurix_test_sandbox/Documents/Projects/file_050.xlsx",
+        "/tmp/heurix_test_sandbox/Documents/Projects/file_043.py",
+        "/tmp/heurix_test_sandbox/Documents/Projects/file_024.js",
+        "/tmp/heurix_test_sandbox/Documents/Projects/file_021.pdf",
+        "/tmp/heurix_test_sandbox/Documents/Projects/file_015.pdf",
+        "/tmp/heurix_test_sandbox/Documents/Projects/file_001.pdf",
+        "/tmp/heurix_test_sandbox/Desktop/Financials/file_057.xlsx",
+        "/tmp/heurix_test_sandbox/Desktop/Financials/file_054.pdf",
+        "/tmp/heurix_test_sandbox/Desktop/Financials/file_034.docx",
+        "/tmp/heurix_test_sandbox/Desktop/Financials/file_020.xlsx",
+        "/tmp/heurix_test_sandbox/Desktop/Financials/file_017.docx",
+        "/tmp/heurix_test_sandbox/Desktop/Financials/file_011.hpp",
+        "/tmp/heurix_test_sandbox/Desktop/Financials/file_006.zip",
+        "/tmp/heurix_test_sandbox/Downloads/Archives/file_044.py",
+        "/tmp/heurix_test_sandbox/Downloads/Archives/file_014.py",
+        "/tmp/heurix_test_sandbox/Downloads/Archives/file_010.png",
+        "/tmp/heurix_test_sandbox/SourceCode/src/file_045.xlsx",
+        "/tmp/heurix_test_sandbox/SourceCode/src/file_039.xlsx",
+        "/tmp/heurix_test_sandbox/SourceCode/src/file_032.js",
+        "/tmp/heurix_test_sandbox/SourceCode/src/file_025.js",
+        "/tmp/heurix_test_sandbox/SourceCode/src/file_008.docx",
+        "/tmp/heurix_test_sandbox/SourceCode/src/file_004.cpp",
+        "/tmp/heurix_test_sandbox/SourceCode/src/file_000.zip"
       ],
       "replica": [
-        {
-          "rel_path": "generated_module_0.cpp.akira",
-          "extension": ".akira",
-          "size": 4096,
-          "entropy": 7.9519
-        },
-        {
-          "rel_path": "generated_module_1.cpp.locked",
-          "extension": ".locked",
-          "size": 4096,
-          "entropy": 7.9586
-        },
-        {
-          "rel_path": "generated_module_2.js.qilin",
-          "extension": ".qilin",
-          "size": 4096,
-          "entropy": 7.9552
-        },
-        {
-          "rel_path": "generated_module_3.cpp.locked",
-          "extension": ".locked",
-          "size": 4096,
-          "entropy": 7.9586
-        },
-        {
-          "rel_path": "generated_module_4.js.qilin",
-          "extension": ".qilin",
-          "size": 4096,
-          "entropy": 7.9624
-        },
-        {
-          "rel_path": "generated_module_6.cpp.akira",
-          "extension": ".akira",
-          "size": 4096,
-          "entropy": 7.9515
-        },
-        {
-          "rel_path": "generated_module_7.js.locked",
-          "extension": ".locked",
-          "size": 4096,
-          "entropy": 7.95
-        },
-        {
-          "rel_path": "generated_module_8.js.akira",
-          "extension": ".akira",
-          "size": 4096,
-          "entropy": 7.9527
-        },
-        {
-          "rel_path": "generated_module_9.js.locked",
-          "extension": ".locked",
-          "size": 4096,
-          "entropy": 7.9594
-        },
-        {
-          "rel_path": "generated_module_10.js.qilin",
-          "extension": ".qilin",
-          "size": 4096,
-          "entropy": 7.96
-        },
-        {
-          "rel_path": "generated_module_11.js.qilin",
-          "extension": ".qilin",
-          "size": 4096,
-          "entropy": 7.9451
-        },
-        {
-          "rel_path": "generated_module_13.js.qilin",
-          "extension": ".qilin",
-          "size": 4096,
-          "entropy": 7.9573
-        },
-        {
-          "rel_path": "generated_module_14.cpp.locked",
-          "extension": ".locked",
-          "size": 4096,
-          "entropy": 7.9484
-        },
-        {
-          "rel_path": "generated_module_15.js.akira",
-          "extension": ".akira",
-          "size": 4096,
-          "entropy": 7.9568
-        },
-        {
-          "rel_path": "generated_module_17.js.akira",
-          "extension": ".akira",
-          "size": 4096,
-          "entropy": 7.9545
-        },
-        {
-          "rel_path": "generated_module_18.cpp.akira",
-          "extension": ".akira",
-          "size": 4096,
-          "entropy": 7.9518
-        },
-        {
-          "rel_path": "generated_module_19.cpp.akira",
-          "extension": ".akira",
-          "size": 4096,
-          "entropy": 7.9599
-        },
-        {
-          "rel_path": "generated_module_20.cpp.qilin",
-          "extension": ".qilin",
-          "size": 4096,
-          "entropy": 7.9537
-        },
-        {
-          "rel_path": "generated_module_21.cpp.akira",
-          "extension": ".akira",
-          "size": 4096,
-          "entropy": 7.9504
-        },
-        {
-          "rel_path": "generated_module_22.js.qilin",
-          "extension": ".qilin",
-          "size": 4096,
-          "entropy": 7.9514
-        },
-        {
-          "rel_path": "generated_module_23.cpp.locked",
-          "extension": ".locked",
-          "size": 4096,
-          "entropy": 7.9621
-        },
-        {
-          "rel_path": "generated_module_24.cpp.akira",
-          "extension": ".akira",
-          "size": 4096,
-          "entropy": 7.9567
-        },
-        {
-          "rel_path": "generated_module_26.js.akira",
-          "extension": ".akira",
-          "size": 4096,
-          "entropy": 7.9536
-        },
-        {
-          "rel_path": "generated_module_27.js.akira",
-          "extension": ".akira",
-          "size": 4096,
-          "entropy": 7.952
-        },
-        {
-          "rel_path": "generated_module_28.cpp.qilin",
-          "extension": ".qilin",
-          "size": 4096,
-          "entropy": 7.9539
-        },
-        {
-          "rel_path": "generated_module_29.js.akira",
-          "extension": ".akira",
-          "size": 4096,
-          "entropy": 7.951
-        }
+        "/tmp/heurix_test_sandbox/Documents/Projects/file_015.pdf.locked",
+        "/tmp/heurix_test_sandbox/Documents/Projects/file_043.py.locked",
+        "/tmp/heurix_test_sandbox/Documents/Projects/file_021.pdf.locked",
+        "/tmp/heurix_test_sandbox/Documents/Projects/file_001.pdf.locked",
+        "/tmp/heurix_test_sandbox/Documents/Projects/file_024.js.locked",
+        "/tmp/heurix_test_sandbox/Documents/Projects/file_050.xlsx.locked",
+        "/tmp/heurix_test_sandbox/Desktop/Financials/file_034.docx.locked",
+        "/tmp/heurix_test_sandbox/Desktop/Financials/file_054.pdf.locked",
+        "/tmp/heurix_test_sandbox/Desktop/Financials/file_011.hpp.locked",
+        "/tmp/heurix_test_sandbox/Desktop/Financials/file_057.xlsx.locked",
+        "/tmp/heurix_test_sandbox/Desktop/Financials/file_017.docx.locked",
+        "/tmp/heurix_test_sandbox/Desktop/Financials/file_006.zip.locked",
+        "/tmp/heurix_test_sandbox/Desktop/Financials/file_020.xlsx.locked",
+        "/tmp/heurix_test_sandbox/Downloads/Archives/file_014.py.locked",
+        "/tmp/heurix_test_sandbox/Downloads/Archives/file_044.py.locked",
+        "/tmp/heurix_test_sandbox/Downloads/Archives/file_010.png.locked",
+        "/tmp/heurix_test_sandbox/SourceCode/src/file_008.docx.locked",
+        "/tmp/heurix_test_sandbox/SourceCode/src/file_004.cpp.locked",
+        "/tmp/heurix_test_sandbox/SourceCode/src/ai_gen_005.json.locked",
+        "/tmp/heurix_test_sandbox/SourceCode/src/file_000.zip.locked",
+        "/tmp/heurix_test_sandbox/SourceCode/src/ai_gen_002.cpp.locked",
+        "/tmp/heurix_test_sandbox/SourceCode/src/ai_gen_006.json.locked",
+        "/tmp/heurix_test_sandbox/SourceCode/src/ai_gen_014.js.locked",
+        "/tmp/heurix_test_sandbox/SourceCode/src/file_039.xlsx.locked",
+        "/tmp/heurix_test_sandbox/SourceCode/src/ai_gen_012.json.locked",
+        "/tmp/heurix_test_sandbox/SourceCode/src/ai_gen_007.js.locked",
+        "/tmp/heurix_test_sandbox/SourceCode/src/file_045.xlsx.locked",
+        "/tmp/heurix_test_sandbox/SourceCode/src/file_032.js.locked",
+        "/tmp/heurix_test_sandbox/SourceCode/src/file_025.js.locked",
+        "/tmp/heurix_test_sandbox/SourceCode/src/ai_gen_015.json.locked",
+        "/tmp/heurix_test_sandbox/SourceCode/src/ai_gen_019.hpp",
+        "/tmp/heurix_test_sandbox/SourceCode/src/ai_gen_018.js",
+        "/tmp/heurix_test_sandbox/SourceCode/src/ai_gen_017.json",
+        "/tmp/heurix_test_sandbox/SourceCode/src/ai_gen_016.cpp",
+        "/tmp/heurix_test_sandbox/SourceCode/src/ai_gen_013.json",
+        "/tmp/heurix_test_sandbox/SourceCode/src/ai_gen_011.ts",
+        "/tmp/heurix_test_sandbox/SourceCode/src/ai_gen_010.js",
+        "/tmp/heurix_test_sandbox/SourceCode/src/ai_gen_009.ts",
+        "/tmp/heurix_test_sandbox/SourceCode/src/ai_gen_008.json",
+        "/tmp/heurix_test_sandbox/SourceCode/src/ai_gen_004.js",
+        "/tmp/heurix_test_sandbox/SourceCode/src/ai_gen_003.cpp",
+        "/tmp/heurix_test_sandbox/SourceCode/src/ai_gen_001.js",
+        "/tmp/heurix_test_sandbox/SourceCode/src/ai_gen_000.ts"
       ]
     }
   },
-  "process_performance": {
-    "avg_cpu": 0.0,
-    "max_cpu": 0.0,
-    "avg_rss_mb": 0.0,
-    "max_rss_mb": 0.0
+  "performance": {
+    "cpu_avg_percent": 0.0,
+    "cpu_max_percent": 0.0,
+    "ram_avg_mb": 0.0,
+    "ram_max_mb": 0.0
   },
-  "evaluation_metrics": {
-    "confusion_matrix": {
-      "TP": 1,
-      "TN": 1,
-      "FP": 0,
-      "FN": 0
+  "accuracy_metrics": {
+    "total_trials": 50,
+    "tp": 30,
+    "tn": 20,
+    "fp": 0,
+    "fn": 0,
+    "accuracy": 1.0,
+    "precision": 1.0,
+    "recall_sensitivity": 1.0,
+    "specificity": 1.0,
+    "f1_score": 1.0,
+    "latency_mean_ms": 1.16,
+    "latency_p95_ms": 1.4
+  },
+  "simulations": {
+    "benign": {
+      "mode": "benign_ai_editor",
+      "files_created": 20,
+      "duration_sec": 0.414,
+      "rate_files_per_sec": 48.32
     },
-    "performance": {
-      "accuracy": 1.0,
-      "precision": 1.0,
-      "recall": 1.0,
-      "f1_score": 1.0,
-      "avg_detection_latency_ms": 593.98
+    "attack": {
+      "mode": "malicious_double_extortion",
+      "extension": ".locked",
+      "files_encrypted": 30,
+      "duration_sec": 0.325,
+      "rate_files_per_sec": 92.31
+    },
+    "egress": {
+      "mode": "egress_c2_simulation",
+      "target": "127.0.0.1:50051",
+      "pings": 3,
+      "successful_handshakes": 0,
+      "duration_sec": 0.151
     }
   }
 }

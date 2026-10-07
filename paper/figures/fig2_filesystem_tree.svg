@@ -1,0 +1,88 @@
+<svg width="780" height="460" viewBox="0 0 780 460" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font-family: system-ui, -apple-system, sans-serif; font-size: 20px; font-weight: 700; fill: #1e293b; }
+      .subtitle { font-family: system-ui, -apple-system, sans-serif; font-size: 13px; fill: #64748b; }
+      .node-lbl { font-family: system-ui, -apple-system, sans-serif; font-size: 13px; font-weight: 700; fill: #0f172a; }
+      .sub-lbl { font-family: system-ui, -apple-system, sans-serif; font-size: 11px; fill: #475569; }
+      .edge { stroke: #cbd5e1; stroke-width: 2; stroke-dasharray: 4,4; }
+    </style>
+  </defs>
+
+  <rect width="780" height="460" rx="16" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="32" y="44" class="title">File-System Topology &amp; Damage Map</text>
+  <text x="32" y="66" class="subtitle">Hierarchical Containment Boundary Across Directory Trees</text>
+
+  <!-- Connection Edges -->
+  <line x1="390" y1="130" x2="190" y2="230" class="edge"/>
+  <line x1="390" y1="130" x2="390" y2="230" class="edge"/>
+  <line x1="390" y1="130" x2="590" y2="230" class="edge"/>
+
+  <line x1="190" y1="270" x2="120" y2="350" class="edge"/>
+  <line x1="190" y1="270" x2="260" y2="350" class="edge"/>
+
+  <line x1="590" y1="270" x2="520" y2="350" class="edge"/>
+  <line x1="590" y1="270" x2="660" y2="350" class="edge"/>
+
+  <!-- Root Node -->
+  <g transform="translate(390, 130)">
+    <rect x="-90" y="-28" width="180" height="56" rx="12" fill="#f8fafc" stroke="#64748b" stroke-width="2"/>
+    <text x="0" y="-4" text-anchor="middle" class="node-lbl">/ (Root Directory)</text>
+    <text x="0" y="16" text-anchor="middle" class="sub-lbl">Protected Workspace</text>
+  </g>
+
+  <!-- Level 1 Nodes -->
+  <!-- Documents Node (Protected) -->
+  <g transform="translate(190, 230)">
+    <rect x="-80" y="-24" width="160" height="48" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+    <text x="0" y="-2" text-anchor="middle" class="node-lbl" fill="#047857">/Documents</text>
+    <text x="0" y="15" text-anchor="middle" class="sub-lbl" fill="#065f46">100% Pristine</text>
+  </g>
+
+  <!-- SourceCode Node (Interception Point) -->
+  <g transform="translate(390, 230)">
+    <rect x="-80" y="-24" width="160" height="48" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+    <text x="0" y="-2" text-anchor="middle" class="node-lbl" fill="#1d4ed8">/SourceCode</text>
+    <text x="0" y="15" text-anchor="middle" class="sub-lbl" fill="#1e40af">HeuriX Intercept</text>
+  </g>
+
+  <!-- Desktop Node (Canary Guarded) -->
+  <g transform="translate(590, 230)">
+    <rect x="-80" y="-24" width="160" height="48" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+    <text x="0" y="-2" text-anchor="middle" class="node-lbl" fill="#047857">/Desktop</text>
+    <text x="0" y="15" text-anchor="middle" class="sub-lbl" fill="#065f46">Canary Guarded</text>
+  </g>
+
+  <!-- Level 2 Sub-nodes -->
+  <g transform="translate(120, 350)">
+    <circle cx="0" cy="0" r="20" fill="#10b981"/>
+    <text x="0" y="4" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="bold" fill="#ffffff">Projects</text>
+  </g>
+  <g transform="translate(260, 350)">
+    <circle cx="0" cy="0" r="20" fill="#10b981"/>
+    <text x="0" y="4" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="bold" fill="#ffffff">Reports</text>
+  </g>
+
+  <g transform="translate(520, 350)">
+    <circle cx="0" cy="0" r="20" fill="#10b981"/>
+    <text x="0" y="4" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="bold" fill="#ffffff">Finances</text>
+  </g>
+  <g transform="translate(660, 350)">
+    <circle cx="0" cy="0" r="20" fill="#f59e0b"/>
+    <text x="0" y="4" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="bold" fill="#ffffff">Canary</text>
+  </g>
+
+  <!-- Bottom Legend Banner -->
+  <rect x="32" y="405" width="716" height="36" rx="8" fill="#f8fafc" stroke="#e2e8f0"/>
+  <circle cx="60" cy="423" r="6" fill="#10b981"/>
+  <text x="74" y="427" font-family="sans-serif" font-size="12" fill="#334155">Pristine Tree</text>
+
+  <circle cx="210" cy="423" r="6" fill="#ef4444"/>
+  <text x="224" y="427" font-family="sans-serif" font-size="12" fill="#334155">Containment Breach</text>
+
+  <circle cx="390" cy="423" r="6" fill="#f59e0b"/>
+  <text x="404" y="427" font-family="sans-serif" font-size="12" fill="#334155">Canary Decoy</text>
+
+  <circle cx="540" cy="423" r="6" fill="#3b82f6"/>
+  <text x="554" y="427" font-family="sans-serif" font-size="12" fill="#334155">HeuriX Sensor Node</text>
+</svg>
