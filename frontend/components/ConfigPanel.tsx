@@ -162,7 +162,7 @@ export function ConfigPanel({ theme, setTheme, watchDir, setWatchDir, onRestartE
             </div>
             <div className="hx-radio-card" data-active={mitigation === 'terminate'} onClick={() => setMitigation('terminate')}>
               <div className="hx-radio-title">Terminate Process</div>
-              <div className="hx-radio-desc">SIGTERM -> SIGKILL: destroy the offending process.</div>
+              <div className="hx-radio-desc">SIGTERM &rarr; SIGKILL: destroy the offending process.</div>
             </div>
             <div className="hx-radio-card" data-active={mitigation === 'quarantine'} onClick={() => setMitigation('quarantine')}>
               <div className="hx-radio-title">Quarantine File</div>

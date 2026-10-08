@@ -226,12 +226,32 @@ fn get_engine_status(state: tauri::State<EngineState>) -> bool {
 #[tauri::command]
 async fn restart_engine(state: tauri::State<'_, EngineState>) -> Result<(), String> {
     if state.connected.load(Ordering::SeqCst) {
-        Ok(())
-    } else {
-        client().await.map(|_| ()).map_err(|e| {
-            format!("{e}. Start it with `sudo systemctl start heurix` (Linux) or the Services console (Windows).")
-        })
+        return Ok(());
     }
+    if client().await.is_ok() {
+        return Ok(());
+    }
+
+    // Try auto-launching local build binary if available
+    let candidates = vec![
+        PathBuf::from("./build/heurix-engine"),
+        PathBuf::from("../build/heurix-engine"),
+        PathBuf::from("/usr/local/bin/heurix-engine"),
+    ];
+
+    for bin in candidates {
+        if bin.exists() {
+            let _ = std::process::Command::new(&bin).spawn();
+            sleep(Duration::from_millis(600)).await;
+            if client().await.is_ok() {
+                return Ok(());
+            }
+        }
+    }
+
+    client().await.map(|_| ()).map_err(|e| {
+        format!("{e}. Start the backend daemon with `./build/heurix-engine` or `sudo systemctl start heurix`.")
+    })
 }
 
 #[tauri::command]

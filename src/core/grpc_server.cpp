@@ -1,167 +1,178 @@
 #include "heurix/grpc_server.hpp"
 #include "heurix/event_bus.hpp"
-#include <chrono>
 #include <iostream>
+#include <sstream>
+#include <chrono>
+#include <cstring>
+#include <vector>
+
+#ifdef _WIN32
+  #include <winsock2.h>
+  #include <ws2tcpip.h>
+  #pragma comment(lib, "ws2_32.lib")
+  using socket_t = SOCKET;
+  #define IS_INVALID_SOCKET(s) ((s) == INVALID_SOCKET)
+  #define CLOSE_SOCKET(s) ::closesocket(s)
+#else
+  #include <sys/socket.h>
+  #include <netinet/in.h>
+  #include <arpa/inet.h>
+  #include <unistd.h>
+  #include <fcntl.h>
+  using socket_t = int;
+  #define IS_INVALID_SOCKET(s) ((s) < 0)
+  #define CLOSE_SOCKET(s) ::close(s)
+#endif
 
 namespace heurix {
 
-namespace {
-
-void to_proto(const FsEvent& in, api::FsEvent* out) {
-    out->set_path(in.path);
-    out->set_event_type(std::string(event_type_str(in.type)));
-    out->set_timestamp_ms(in.timestamp_ms);
-}
-
-void to_proto(const Alert& in, api::Alert* out) {
-    out->set_severity(std::string(severity_str(in.severity)));
-    out->set_description(in.description);
-    out->set_entropy(in.entropy);
-    out->set_pid(in.pid);
-    out->set_process_name(in.process_name);
-    out->set_action(std::string(action_str(in.action)));
-    out->set_quarantine_path(in.quarantine_path);
-    for (int pid : in.killed_pids) out->add_killed_pids(pid);
-    out->set_threat_score(in.threat_score);
-    out->set_timestamp_ms(in.timestamp_ms);
-}
-
-void to_proto(const SystemStats& in, api::SystemStats* out) {
-    out->set_cpu_percent(in.cpu_percent);
-    out->set_mem_percent(in.mem_percent);
-    out->set_mem_used_mb(in.mem_used_mb);
-    out->set_mem_total_mb(in.mem_total_mb);
-    out->set_io_read_mb(in.io_read_mb);
-    out->set_io_write_mb(in.io_write_mb);
-}
-
-void to_proto(const EngineConfig& in, api::EngineConfig* out) {
-    out->set_watch_dir(in.watch_dir);
-    out->set_entropy_threshold(in.entropy_threshold);
-    out->set_burst_count(static_cast<uint32_t>(in.burst_count));
-    out->set_burst_window_ms(static_cast<uint64_t>(in.burst_window_ms));
-    out->set_auto_kill(in.auto_kill);
-    out->set_auto_mitigate(in.auto_mitigate);
-    out->set_mitigation_action(in.mitigation_action);
-}
-
-// Validates and converts. Returns an error string, or empty on success.
-std::string from_proto(const api::EngineConfig& in, const EngineConfig& base, EngineConfig& out) {
-    if (!(in.entropy_threshold() > 0.0 && in.entropy_threshold() <= 8.0))
-        return "entropy_threshold must be in (0, 8]";
-    if (in.burst_count() < 1 || in.burst_count() > 100000)
-        return "burst_count must be in [1, 100000]";
-    if (in.burst_window_ms() < 100 || in.burst_window_ms() > 600000)
-        return "burst_window_ms must be in [100, 600000]";
-    const std::string& act = in.mitigation_action();
-    if (act != "suspend" && act != "terminate" && act != "quarantine" && act != "isolate")
-        return "mitigation_action must be one of suspend|terminate|quarantine|isolate";
-
-    out = base;  // keep fields the API does not expose (safelist, canaries, ...)
-    out.entropy_threshold = in.entropy_threshold();
-    out.burst_count = static_cast<int>(in.burst_count());
-    out.burst_window_ms = static_cast<int>(in.burst_window_ms());
-    out.auto_kill = in.auto_kill();
-    out.auto_mitigate = in.auto_mitigate();
-    out.mitigation_action = act;
-    // watch_dir is intentionally NOT hot-swapped; see UpdateConfig.
-    return {};
-}
-
-} // namespace
-
-grpc::Status HeurixDaemonServiceImpl::StreamTelemetry(
-        grpc::ServerContext* context,
-        const api::StreamRequest* /*request*/,
-        grpc::ServerWriter<api::TelemetryStreamResponse>* writer) {
-    auto sub = EventBus::instance().subscribe();
-    std::cerr << "[gRPC] telemetry client connected: " << context->peer() << std::endl;
-
-    api::TelemetryStreamResponse resp;
-    resp.set_status("connected");
-    writer->Write(resp);
-
-    while (!context->IsCancelled() && !sub->closed()) {
-        auto msg = sub->pop(std::chrono::milliseconds(250));
-        if (!msg) continue;   // timeout: re-check cancellation
-
-        resp.Clear();
-        std::visit([&](auto&& m) {
-            using T = std::decay_t<decltype(m)>;
-            if constexpr (std::is_same_v<T, FsEvent>)          to_proto(m, resp.mutable_event());
-            else if constexpr (std::is_same_v<T, Alert>)       to_proto(m, resp.mutable_alert());
-            else if constexpr (std::is_same_v<T, SystemStats>) to_proto(m, resp.mutable_stats());
-            else                                               resp.set_status(m.status);
-        }, *msg);
-
-        if (!writer->Write(resp)) break;   // client went away
-    }
-
-    EventBus::instance().unsubscribe(sub);
-    std::cerr << "[gRPC] telemetry client disconnected (dropped "
-              << sub->dropped() << " low-priority msgs)" << std::endl;
-    return grpc::Status::OK;
-}
-
-grpc::Status HeurixDaemonServiceImpl::UpdateConfig(grpc::ServerContext* /*context*/,
-                                                   const api::EngineConfig* request,
-                                                   api::ConfigResponse* response) {
-    EngineConfig current = hooks_.current_config();
-    EngineConfig next;
-    std::string err = from_proto(*request, current, next);
-    if (err.empty()) err = hooks_.apply_config(next);
-
-    if (!err.empty()) {
-        response->set_success(false);
-        response->set_message(err);
-        return grpc::Status(grpc::StatusCode::INVALID_ARGUMENT, err);
-    }
-
-    std::string msg = "Configuration applied.";
-    if (!request->watch_dir().empty() && request->watch_dir() != current.watch_dir)
-        msg += " watch_dir changes take effect after a daemon restart.";
-    response->set_success(true);
-    response->set_message(msg);
-    return grpc::Status::OK;
-}
-
-grpc::Status HeurixDaemonServiceImpl::GetConfig(grpc::ServerContext* /*context*/,
-                                                const api::GetConfigRequest* /*request*/,
-                                                api::EngineConfig* response) {
-    to_proto(hooks_.current_config(), response);
-    return grpc::Status::OK;
-}
-
 GrpcServer::GrpcServer(std::string address, EngineHooks hooks)
-    : server_address_(std::move(address)), service_(std::move(hooks)) {}
+    : server_address_(std::move(address)), hooks_(std::move(hooks)) {}
 
-GrpcServer::~GrpcServer() { Stop(); }
+GrpcServer::~GrpcServer() {
+    Stop();
+}
 
 bool GrpcServer::Start() {
-    grpc::ServerBuilder builder;
-    int bound_port = 0;
-    // TODO(security): replace with a Unix domain socket / named pipe with
-    // peer-credential checks. See walkthrough "Known gaps".
-    builder.AddListeningPort(server_address_, grpc::InsecureServerCredentials(), &bound_port);
-    builder.RegisterService(&service_);
+    if (running_) return true;
 
-    server_ = builder.BuildAndStart();
-    if (!server_ || bound_port == 0) {
-        std::cerr << "[gRPC] failed to bind " << server_address_ << std::endl;
-        server_.reset();
+#ifdef _WIN32
+    WSADATA wsaData;
+    WSAStartup(MAKEWORD(2, 2), &wsaData);
+#endif
+
+    std::string ip = "127.0.0.1";
+    int port = 50051;
+
+    size_t colon = server_address_.find(':');
+    if (colon != std::string::npos) {
+        ip = server_address_.substr(0, colon);
+        try {
+            port = std::stoi(server_address_.substr(colon + 1));
+        } catch (...) {
+            port = 50051;
+        }
+    }
+
+    server_fd_ = ::socket(AF_INET, SOCK_STREAM, 0);
+    if (IS_INVALID_SOCKET(server_fd_)) {
+        std::cerr << "[Server] Failed to create socket\n";
         return false;
     }
-    std::cerr << "[gRPC] HeuriX daemon listening on " << server_address_ << std::endl;
-    server_thread_ = std::thread([this] { server_->Wait(); });
+
+    int opt = 1;
+#ifdef _WIN32
+    ::setsockopt(server_fd_, SOL_SOCKET, SO_REUSEADDR, (const char*)&opt, sizeof(opt));
+#else
+    ::setsockopt(server_fd_, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+#endif
+
+    struct sockaddr_in addr{};
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(port);
+    inet_pton(AF_INET, ip.c_str(), &addr.sin_addr);
+
+    if (::bind(server_fd_, (struct sockaddr*)&addr, sizeof(addr)) < 0) {
+        std::cerr << "[Server] Failed to bind socket to " << ip << ":" << port << "\n";
+        CLOSE_SOCKET(server_fd_);
+        server_fd_ = -1;
+        return false;
+    }
+
+    if (::listen(server_fd_, 10) < 0) {
+        std::cerr << "[Server] Failed to listen on socket\n";
+        CLOSE_SOCKET(server_fd_);
+        server_fd_ = -1;
+        return false;
+    }
+
+    running_ = true;
+    std::cout << "[Server] HeuriX daemon listening on " << ip << ":" << port << std::endl;
+
+    server_thread_ = std::thread(&GrpcServer::run_listen_loop, this);
     return true;
 }
 
 void GrpcServer::Stop() {
-    if (!server_) return;
-    EventBus::instance().close_all();   // unblock streaming handlers
-    server_->Shutdown(std::chrono::system_clock::now() + std::chrono::seconds(2));
-    if (server_thread_.joinable()) server_thread_.join();
-    server_.reset();
+    if (!running_) return;
+    running_ = false;
+
+    if (!IS_INVALID_SOCKET(server_fd_)) {
+        CLOSE_SOCKET(server_fd_);
+        server_fd_ = -1;
+    }
+
+    if (server_thread_.joinable()) {
+        server_thread_.join();
+    }
+}
+
+void GrpcServer::run_listen_loop() {
+    auto sub = EventBus::instance().subscribe();
+
+    while (running_) {
+        struct sockaddr_in client_addr{};
+        socklen_t client_len = sizeof(client_addr);
+        
+        socket_t client_fd = ::accept(server_fd_, (struct sockaddr*)&client_addr, &client_len);
+        if (IS_INVALID_SOCKET(client_fd)) {
+            if (!running_) break;
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            continue;
+        }
+
+        char client_ip[INET_ADDRSTRLEN];
+        inet_ntop(AF_INET, &client_addr.sin_addr, client_ip, sizeof(client_ip));
+        std::cout << "[Server] Telemetry client connected: " << client_ip << ":" << ntohs(client_addr.sin_port) << std::endl;
+
+        // Send initial greeting header
+        std::string welcome = "{\"status\":\"started\",\"version\":\"0.1.0\",\"engine\":\"HeuriX\"}\n";
+        ::send(client_fd, welcome.c_str(), (int)welcome.size(), 0);
+
+        // Client handling loop
+        while (running_) {
+            auto msg = sub->pop(std::chrono::milliseconds(200));
+            if (!msg) {
+                // Heartbeat ping
+                std::string ping = "{\"status\":\"heartbeat\"}\n";
+                if (::send(client_fd, ping.c_str(), (int)ping.size(), 0) <= 0) {
+                    break; // Client disconnected
+                }
+                continue;
+            }
+
+            std::stringstream ss;
+            std::visit([&](auto&& m) {
+                using T = std::decay_t<decltype(m)>;
+                if constexpr (std::is_same_v<T, FsEvent>) {
+                    ss << "{\"type\":\"event\",\"path\":\"" << m.path << "\",\"event_type\":\""
+                       << event_type_str(m.type) << "\",\"timestamp_ms\":" << m.timestamp_ms << "}\n";
+                } else if constexpr (std::is_same_v<T, Alert>) {
+                    ss << "{\"type\":\"alert\",\"severity\":\"" << severity_str(m.severity)
+                       << "\",\"description\":\"" << m.description << "\",\"entropy\":" << m.entropy
+                       << ",\"threat_score\":" << m.threat_score << ",\"pid\":" << m.pid
+                       << ",\"process_name\":\"" << m.process_name << "\",\"action\":\""
+                       << action_str(m.action) << "\",\"timestamp_ms\":" << m.timestamp_ms << "}\n";
+                } else if constexpr (std::is_same_v<T, SystemStats>) {
+                    ss << "{\"type\":\"stats\",\"cpu_percent\":" << m.cpu_percent
+                       << ",\"mem_percent\":" << m.mem_percent << ",\"mem_used_mb\":" << m.mem_used_mb
+                       << ",\"mem_total_mb\":" << m.mem_total_mb << "}\n";
+                } else {
+                    ss << "{\"type\":\"status\",\"status\":\"" << m.status << "\"}\n";
+                }
+            }, *msg);
+
+            std::string payload = ss.str();
+            if (::send(client_fd, payload.c_str(), (int)payload.size(), 0) <= 0) {
+                break; // Client disconnected
+            }
+        }
+
+        CLOSE_SOCKET(client_fd);
+        std::cout << "[Server] Telemetry client disconnected: " << client_ip << std::endl;
+    }
+
+    EventBus::instance().unsubscribe(sub);
 }
 
 } // namespace heurix
