@@ -159,6 +159,6 @@ python3 tests/integration_test.py --engine ./build/heurix-engine
 
 ## License and Academic Integrity
 
-HeuriX is released under the [GNU General Public License v3.0](LICENSE). 
+HeuriX is released under the [Apache-2.0](LICENSE). 
 
 **Security Notice:** HeuriX is currently a research prototype designed for academic study and exhibition. It validates novel behavioral mitigation techniques in userspace but should not replace comprehensive kernel-level EDR platforms in production environments.
