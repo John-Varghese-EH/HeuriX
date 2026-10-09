@@ -1,0 +1,145 @@
+<svg width="960" height="540" viewBox="0 0 960 540" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/>
+    </marker>
+    <style>
+      .main-title { font-family: system-ui, -apple-system, sans-serif; font-size: 22px; font-weight: 800; fill: #0f172a; }
+      .container-title { font-family: system-ui, -apple-system, sans-serif; font-size: 16px; font-weight: 700; fill: #1e293b; }
+      .container-sub { font-family: system-ui, -apple-system, sans-serif; font-size: 12px; fill: #64748b; }
+      .card-hdr { font-family: system-ui, -apple-system, sans-serif; font-size: 13px; font-weight: 700; fill: #1e293b; }
+      .card-sub { font-family: system-ui, -apple-system, sans-serif; font-size: 11px; fill: #64748b; }
+      .step-num { font-family: system-ui, -apple-system, sans-serif; font-size: 12px; font-weight: 800; fill: #3b82f6; }
+      .footer-note { font-family: system-ui, -apple-system, sans-serif; font-size: 12px; font-weight: 600; fill: #475569; }
+    </style>
+  </defs>
+
+  <!-- Base canvas -->
+  <rect width="960" height="540" rx="16" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- CONTAINER 1: Test Host / VM (Left) -->
+  <g transform="translate(32, 40)">
+    <rect width="260" height="420" rx="14" fill="#f7f6f2" stroke="#d6d1c7" stroke-width="1.5" stroke-dasharray="6,6"/>
+    <text x="130" y="32" text-anchor="middle" class="container-title">Test Environment</text>
+    <text x="130" y="50" text-anchor="middle" class="container-sub">Linux / Windows Host VM</text>
+
+    <!-- Card 1: Platform Sensor -->
+    <g transform="translate(20, 75)">
+      <rect width="220" height="75" rx="10" fill="#ffffff" stroke="#e0dcd5" stroke-width="1.5"/>
+      <text x="16" y="28" class="card-hdr">Platform OS Kernel</text>
+      <text x="16" y="48" class="card-sub">fanotify / ETW Telemetry Sourcing</text>
+    </g>
+
+    <!-- Connector line -->
+    <line x1="130" y1="150" x2="130" y2="175" stroke="#a8a29e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+    <!-- Card 2: Workspace -->
+    <g transform="translate(20, 175)">
+      <rect width="220" height="75" rx="10" fill="#ffffff" stroke="#e0dcd5" stroke-width="1.5"/>
+      <text x="16" y="28" class="card-hdr">Monitored Workspace</text>
+      <text x="16" y="48" class="card-sub">User files + Dynamic Decoy Canaries</text>
+    </g>
+
+    <!-- Connector line -->
+    <line x1="130" y1="250" x2="130" y2="275" stroke="#a8a29e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+    <!-- Card 3: Threat Simulator -->
+    <g transform="translate(20, 275)">
+      <rect width="220" height="75" rx="10" fill="#fdf2f0" stroke="#e2b7b0" stroke-width="1.5"/>
+      <text x="16" y="28" class="card-hdr" fill="#8c2318">Ransomware Sim</text>
+      <text x="16" y="48" class="card-sub" fill="#a63c32">Qilin / Akira Threat Profiles</text>
+    </g>
+  </g>
+
+  <!-- CONTAINER 2: HeuriX Engine (Middle) -->
+  <g transform="translate(320, 40)">
+    <rect width="320" height="420" rx="14" fill="#f4f2ff" stroke="#c9c0f8" stroke-width="1.5" stroke-dasharray="6,6"/>
+    <text x="160" y="32" text-anchor="middle" class="container-title" fill="#2d1582">HeuriX Core Engine</text>
+    <text x="160" y="50" text-anchor="middle" class="container-sub" fill="#5b45b0">C++20 Userspace Daemon</text>
+
+    <!-- Steps Stack -->
+    <g transform="translate(20, 70)">
+      <rect width="280" height="325" rx="12" fill="#ffffff" stroke="#ded8fc" stroke-width="1.5"/>
+      
+      <text x="16" y="30" class="step-num">3)</text>
+      <text x="36" y="30" class="card-hdr">Capture pre-content file events</text>
+      <text x="36" y="46" class="card-sub">&lt; 1.2 ms latency, native OS API</text>
+      <line x1="16" y1="58" x2="264" y2="58" stroke="#f1f0fe" stroke-width="1.5"/>
+
+      <text x="16" y="80" class="step-num">4)</text>
+      <text x="36" y="80" class="card-hdr">12-D Feature &amp; Shannon Entropy</text>
+      <text x="36" y="96" class="card-sub">Flag score if H &gt; 7.5 threshold</text>
+      <line x1="16" y1="108" x2="264" y2="108" stroke="#f1f0fe" stroke-width="1.5"/>
+
+      <text x="16" y="130" class="step-num">5)</text>
+      <text x="36" y="130" class="card-hdr">Sliding-window circular buffer</text>
+      <text x="36" y="146" class="card-sub">O(1) write velocity tracking</text>
+      <line x1="16" y1="158" x2="264" y2="158" stroke="#f1f0fe" stroke-width="1.5"/>
+
+      <text x="16" y="180" class="step-num">6)</text>
+      <text x="36" y="180" class="card-hdr">Canary file touched?</text>
+      <text x="36" y="196" class="card-sub">Yes: Instant SIGKILL / Terminate</text>
+      <line x1="16" y1="208" x2="264" y2="208" stroke="#f1f0fe" stroke-width="1.5"/>
+
+      <text x="16" y="230" class="step-num">7)</text>
+      <text x="36" y="230" class="card-hdr">Breach: Resolve PID &amp; Intercept</text>
+      <text x="36" y="246" class="card-sub">FAN_DENY / SIGSTOP process tree</text>
+      <line x1="16" y1="258" x2="264" y2="258" stroke="#f1f0fe" stroke-width="1.5"/>
+
+      <text x="16" y="280" class="step-num">8)</text>
+      <text x="36" y="280" class="card-hdr">Emit JSONL telemetry stream</text>
+      <text x="36" y="296" class="card-sub">PID, paths, entropy vectors</text>
+    </g>
+  </g>
+
+  <!-- CONTAINER 3: Tauri Frontend (Right) -->
+  <g transform="translate(668, 40)">
+    <rect width="260" height="420" rx="14" fill="#f0f7f1" stroke="#bce2c1" stroke-width="1.5" stroke-dasharray="6,6"/>
+    <text x="130" y="32" text-anchor="middle" class="container-title" fill="#14521e">Tauri + React UI</text>
+    <text x="130" y="50" text-anchor="middle" class="container-sub" fill="#2e7d32">Command Center</text>
+
+    <!-- Frontend Steps -->
+    <g transform="translate(20, 70)">
+      <rect width="220" height="230" rx="12" fill="#ffffff" stroke="#c8e6c9" stroke-width="1.5"/>
+      
+      <text x="14" y="30" class="step-num">9)</text>
+      <text x="34" y="30" class="card-hdr">Sidecar reads JSONL stream</text>
+      <line x1="14" y1="48" x2="206" y2="48" stroke="#e8f5e9" stroke-width="1.5"/>
+
+      <text x="14" y="70" class="step-num">10)</text>
+      <text x="34" y="70" class="card-hdr">Tauri Rust core forwards IPC</text>
+      <line x1="14" y1="88" x2="206" y2="88" stroke="#e8f5e9" stroke-width="1.5"/>
+
+      <text x="14" y="110" class="step-num">11)</text>
+      <text x="34" y="110" class="card-hdr">React Dashboard renders alert</text>
+      <line x1="14" y1="128" x2="206" y2="128" stroke="#e8f5e9" stroke-width="1.5"/>
+
+      <text x="14" y="150" class="step-num">12)</text>
+      <text x="34" y="150" class="card-hdr">Forensic Report generated</text>
+      <text x="34" y="166" class="card-sub">PID, entropy, path telemetry</text>
+    </g>
+
+    <!-- Connector line down to SOC -->
+    <line x1="130" y1="300" x2="130" y2="325" stroke="#4caf50" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+    <!-- SOC Analyst Card -->
+    <g transform="translate(20, 325)">
+      <rect width="220" height="65" rx="10" fill="#f5f3ef" stroke="#d5d0c8" stroke-width="1.5"/>
+      <text x="110" y="38" text-anchor="middle" class="card-hdr">SOC Security Analyst</text>
+    </g>
+  </g>
+
+  <!-- Cross-Container Arrows -->
+  <!-- 1 -> 2 (Events) -->
+  <line x1="292" y1="190" x2="320" y2="190" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+  <!-- 2 -> 1 (Kill) -->
+  <line x1="320" y1="310" x2="292" y2="310" stroke="#ef4444" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="306" y="302" text-anchor="middle" font-family="sans-serif" font-size="10" font-weight="bold" fill="#ef4444">kill</text>
+
+  <!-- 2 -> 3 (Telemetry Stream) -->
+  <line x1="640" y1="210" x2="668" y2="210" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Footer Banner Target Performance -->
+  <rect x="32" y="480" width="896" height="38" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="480" y="504" text-anchor="middle" class="footer-note">Target: under 1.2 ms detect-to-kill response, under 18.5 MB idle RAM, under 0.2% CPU overhead</text>
+</svg>

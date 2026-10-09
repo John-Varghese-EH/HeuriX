@@ -1,0 +1,16 @@
+category,metric,value
+Metadata,total_baseline_files,252
+Metadata,pristine_count,209
+Metadata,lost_count,43
+Metadata,replica_count,88
+Metadata,pristine_ratio,0.8294
+Metadata,lost_ratio,0.1706
+Metadata,replica_ratio,0.3492
+Performance,cpu_utilization_pct,0.0
+Performance,ram_rss_mb,0.0
+Performance,avg_latency_ms,0.0
+Accuracy,accuracy,0.65
+Accuracy,precision,0.5882
+Accuracy,recall,0.0
+Accuracy,f1_score,0.7407
+Accuracy,auc_roc,0.0

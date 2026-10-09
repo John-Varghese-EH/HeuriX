@@ -23,16 +23,30 @@ export default function App() {
   const [threatsMitigated, setThreatsMitigated] = useState(0);
 
   // Shared Configuration State
-  const [watchDir, setWatchDir] = useState('/home/j0x/Documents');
+  const [watchDir, setWatchDir] = useState('Loading...');
   const [isRestarting, setIsRestarting] = useState(false);
+
+  useEffect(() => {
+    invoke<string>('get_config')
+      .then(res => {
+        const config = JSON.parse(res);
+        if (config.watch_dir) setWatchDir(config.watch_dir);
+      })
+      .catch(e => console.error(e));
+  }, []);
 
   // Real-time Event Counter
   const eventCountRef = useRef(0);
   useEffect(() => {
     const interval = setInterval(() => {
-      setEventRate(eventCountRef.current);
-      eventCountRef.current = 0;
-    }, 1000);
+      setEventRate(prev => {
+        const currentCount = eventCountRef.current;
+        eventCountRef.current = 0;
+        const perSec = currentCount * 4; // since interval is 250ms
+        const newRate = (prev * 0.7) + (perSec * 0.3);
+        return newRate < 0.5 ? 0 : Math.round(newRate);
+      });
+    }, 250);
     return () => clearInterval(interval);
   }, []);
 
@@ -53,7 +67,7 @@ export default function App() {
 
   useTauriEvent<{type: string, data: FsEvent}>('heurix://fs-event', (payload) => {
     const fsData = payload.data;
-    eventCountRef.current++;
+    eventCountRef.current++; console.log("FS EVENT:", payload);
     setEvents(prev => {
       const next = [...prev, { type: 'fs' as const, data: fsData }];
       return next.length > 500 ? next.slice(next.length - 500) : next;

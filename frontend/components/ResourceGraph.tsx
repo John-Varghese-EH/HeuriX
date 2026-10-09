@@ -21,10 +21,10 @@ export function ResourceGraph({ stats, latest }: ResourceGraphProps) {
 
     const data = stats.slice(-limit);
     return data.map((s, i) => {
-      const cpu = s.cpu_percent;
-      const mem = s.mem_percent;
-      const io_read = s.io_read_mb;
-      const io_write = s.io_write_mb;
+      const cpu = s.cpu_percent || 0;
+      const mem = s.mem_percent || 0;
+      const io_read = s.io_read_mb || 0;
+      const io_write = s.io_write_mb || 0;
       // Calculate total I/O rate
       const io = io_read + io_write;
 
@@ -91,7 +91,7 @@ export function ResourceGraph({ stats, latest }: ResourceGraphProps) {
       <div className="hx-header-row" style={{ marginBottom: '24px' }}>
         <div>
           <h1 className="hx-page-title">System Resources</h1>
-          <p className="hx-page-desc">High-fidelity host telemetry and performance analytics.</p>
+          <p className="hx-page-desc">Host telemetry and performance metrics.</p>
         </div>
         <div style={{ display: 'flex', gap: '8px', background: 'var(--hx-border)', padding: '4px', borderRadius: '8px', border: '1px solid var(--hx-border)' }}>
           <button

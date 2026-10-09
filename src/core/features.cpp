@@ -127,14 +127,21 @@ FeatureVector FeatureExtractor::extract(const FsEvent& ev) {
         window_.pop_front();
 
     size_t renames = 0, deletes = 0, high = 0;
-    std::unordered_set<std::string_view> dirs, exts;
+    std::vector<std::string_view> dirs, exts;
+    dirs.reserve(window_.size());
+    exts.reserve(window_.size());
     for (const auto& w : window_) {
         renames += (w.type == EventType::rename);
         deletes += (w.type == EventType::del);
         high += w.high_entropy;
-        dirs.insert(w.dir);
-        if (!w.ext.empty()) exts.insert(w.ext);
+        dirs.push_back(w.dir);
+        if (!w.ext.empty()) exts.push_back(w.ext);
     }
+    std::sort(dirs.begin(), dirs.end());
+    dirs.erase(std::unique(dirs.begin(), dirs.end()), dirs.end());
+    std::sort(exts.begin(), exts.end());
+    exts.erase(std::unique(exts.begin(), exts.end()), exts.end());
+
     f[6]  = static_cast<double>(window_.size());
     f[7]  = static_cast<double>(renames);
     f[8]  = static_cast<double>(deletes);

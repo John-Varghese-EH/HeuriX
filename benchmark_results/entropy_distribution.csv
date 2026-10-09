@@ -1,0 +1,5 @@
+Type,Mean_Entropy
+Benign Text,4.2
+Benign Binary,6.1
+Compressed (Zip),7.95
+Encrypted (Malicious),7.99

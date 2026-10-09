@@ -1,0 +1,5 @@
+Tool,Detection Rate (%),FPR (%),Response Time (ms),CPU Usage (%)
+HeuriX,96.5,2.8,120,8.4
+SAFARI,94.2,4.1,180,11.2
+CryptoStopper,92.0,5.5,210,15.0
+ShieldFS,95.8,3.2,150,9.5

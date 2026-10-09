@@ -1,0 +1,7 @@
+Feature,Importance_Score
+entropy_delta,0.35
+ext_class,0.2
+renames_in_window,0.15
+header_mismatch,0.12
+high_entropy_in_window,0.1
+events_in_window,0.08

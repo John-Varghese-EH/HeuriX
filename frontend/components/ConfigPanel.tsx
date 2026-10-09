@@ -65,7 +65,7 @@ export function ConfigPanel({ theme, setTheme, watchDir, setWatchDir, onRestartE
     setBurstWindow(2000);
     setMitigation('suspend');
     setAutoMitigate(true);
-    setWatchDir('/home/j0x/Documents');
+    // watchDir is not reset as it's environment-specific
     setStatusMsg({ type: 'success', text: 'Settings reset to defaults. Click "Save Changes" to apply.' });
     setTimeout(() => setStatusMsg(null), 3000);
   };
@@ -108,11 +108,11 @@ export function ConfigPanel({ theme, setTheme, watchDir, setWatchDir, onRestartE
             </div>
             <div className="hx-radio-card" data-active={theme === 'dark'} onClick={() => setTheme('dark')}>
               <div className="hx-radio-title">Dark Mode</div>
-              <div className="hx-radio-desc">Premium stealth aesthetic</div>
+              <div className="hx-radio-desc">Dark theme</div>
             </div>
             <div className="hx-radio-card" data-active={theme === 'light'} onClick={() => setTheme('light')}>
               <div className="hx-radio-title">Light Mode</div>
-              <div className="hx-radio-desc">Clean, bright workspace</div>
+              <div className="hx-radio-desc">Light theme</div>
             </div>
           </div>
         </div>
@@ -169,7 +169,7 @@ export function ConfigPanel({ theme, setTheme, watchDir, setWatchDir, onRestartE
               <div className="hx-radio-desc">Move suspect file to .heurix-quarantine (0400) + suspend PID.</div>
             </div>
             <div className="hx-radio-card" data-active={mitigation === 'isolate'} onClick={() => setMitigation('isolate')}>
-              <div className="hx-radio-title">Isolate (Tree Kill + Quarantine)</div>
+              <div className="hx-radio-title">Isolate (Kill Process Tree & Quarantine File)</div>
               <div className="hx-radio-desc">Kill entire process tree + quarantine file. For critical.</div>
             </div>
           </div>

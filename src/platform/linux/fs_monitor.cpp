@@ -1,3 +1,4 @@
+#include <iostream>
 #include "heurix/platform.hpp"
 #include <thread>
 #include <atomic>
@@ -79,7 +80,7 @@ private:
         if (fd < 0) return;
 
         int wd = inotify_add_watch(fd, path.c_str(),
-            IN_MODIFY | IN_CREATE | IN_DELETE | IN_MOVED_TO | IN_MOVED_FROM);
+            IN_CLOSE_WRITE | IN_CREATE | IN_DELETE | IN_MOVED_TO | IN_MOVED_FROM);
 
         if (wd >= 0) {
             std::lock_guard<std::mutex> lock(watches_mutex);
@@ -94,7 +95,7 @@ private:
             struct inotify_event* event = reinterpret_cast<struct inotify_event*>(ptr);
             if (event->len) {
                 EventType type = EventType::unknown;
-                if (event->mask & IN_MODIFY) type = EventType::modify;
+                if (event->mask & IN_CLOSE_WRITE) type = EventType::modify;
                 else if (event->mask & IN_CREATE) type = EventType::create;
                 else if (event->mask & IN_DELETE) type = EventType::del;
                 else if (event->mask & IN_MOVED_TO || event->mask & IN_MOVED_FROM) type = EventType::rename;
@@ -137,9 +138,12 @@ private:
     void watch_new_dir(const std::string& path) {
         if (fd < 0) return;
         int wd = inotify_add_watch(fd, path.c_str(),
-            IN_MODIFY | IN_CREATE | IN_DELETE | IN_MOVED_TO | IN_MOVED_FROM);
+            IN_CLOSE_WRITE | IN_CREATE | IN_DELETE | IN_MOVED_TO | IN_MOVED_FROM);
         if (wd >= 0) {
+            std::cout << "[HeuriX] Added watch for new dir: " << path << std::endl;
             watch_descriptors[wd] = path;
+        } else {
+            std::cerr << "[HeuriX] Failed to add watch for new dir: " << path << " error: " << errno << std::endl;
         }
     }
 };

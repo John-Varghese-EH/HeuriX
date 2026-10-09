@@ -1,4 +1,5 @@
 [package]
+default-run = "heurix"
 name = "heurix"
 version = "0.1.0"
 description = "HeuriX - Ransomware Detection & Prevention System"
@@ -10,8 +11,6 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
-tonic-build = "0.10"
-protoc-bin-vendored = "3"
 
 [dependencies]
 tauri = { version = "2", features = [] }
@@ -20,6 +19,6 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 tokio = { version = "1", features = ["sync", "time", "rt-multi-thread", "macros"] }
 dirs = "5"
-tonic = "0.10"
-prost = "0.12"
-tokio-stream = "0.1"
+reqwest = { version = "0.11", features = ["json", "stream"] }
+futures-util = "0.3"
+bytes = "1"

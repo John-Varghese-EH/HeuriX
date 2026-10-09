@@ -1,0 +1,15 @@
+scenario_name,is_malicious,detected,detection_time_ms,alert_severity,threat_score,true_positive,false_positive,false_negative,true_negative
+wannacry_sim,True,True,224,high,80,True,False,False,False
+lockbit_sim,True,True,104,high,80,True,False,False,False
+conti_sim,True,False,0,none,0.0,False,False,True,False
+akira_sim,True,True,206,high,80,True,False,False,False
+qilin_sim,True,False,0,none,0.0,False,False,True,False
+entropy_cascade,True,False,0,none,0.0,False,False,True,False
+mass_rename_burst,True,False,0,none,0.0,False,False,True,False
+compiler_sim,False,False,0,none,0.0,False,False,False,True
+log_rotation,False,False,0,none,0.0,False,False,False,True
+media_edit,False,False,0,none,0.0,False,False,False,True
+archive_create,False,False,0,none,0.0,False,False,False,True
+git_operations,False,False,0,none,0.0,False,False,False,True
+normal_editing,False,False,0,none,0.0,False,False,False,True
+npm_install,False,False,0,none,0.0,False,False,False,True

@@ -1,6 +1,7 @@
 #include "heurix/platform.hpp"
 #include <fstream>
 #include <string>
+#include <sstream>
 #include <filesystem>
 #include <chrono>
 
@@ -15,34 +16,42 @@ public:
     SystemStats snapshot() override {
         SystemStats stats{0.0, 0.0, 0, 0, 0.0, 0.0};
 
-        // CPU usage
+        // CPU usage from /proc/stat
         std::ifstream stat_file("/proc/stat");
-        std::string cpu;
-        uint64_t user, nice, system, idle, iowait, irq, softirq, steal;
-        if (stat_file >> cpu >> user >> nice >> system >> idle >> iowait >> irq >> softirq >> steal) {
-            uint64_t total = user + nice + system + idle + iowait + irq + softirq + steal;
-            uint64_t idle_all = idle + iowait;
+        std::string line;
+        if (std::getline(stat_file, line)) {
+            std::istringstream iss(line);
+            std::string cpu;
+            uint64_t user, nice, system, idle, iowait, irq, softirq, steal;
+            if (iss >> cpu >> user >> nice >> system >> idle >> iowait >> irq >> softirq >> steal) {
+                uint64_t total = user + nice + system + idle + iowait + irq + softirq + steal;
+                uint64_t idle_all = idle + iowait;
 
-            if (prev_total != 0) {
-                uint64_t totald = total - prev_total;
-                uint64_t idled = idle_all - prev_idle;
-                if (totald > 0) {
-                    stats.cpu_percent = (totald - idled) * 100.0 / totald;
+                if (prev_total != 0) {
+                    uint64_t totald = total - prev_total;
+                    uint64_t idled = idle_all - prev_idle;
+                    if (totald > 0) {
+                        stats.cpu_percent = (totald - idled) * 100.0 / totald;
+                    }
                 }
+                prev_total = total;
+                prev_idle = idle_all;
             }
-            prev_total = total;
-            prev_idle = idle_all;
         }
 
-        // Memory usage
+        // Memory usage from /proc/meminfo
         std::ifstream meminfo("/proc/meminfo");
         std::string key;
         uint64_t val;
         std::string unit;
         uint64_t mem_total = 0, mem_avail = 0;
-        while (meminfo >> key >> val >> unit) {
+        while (meminfo >> key >> val) {
             if (key == "MemTotal:") mem_total = val;
             else if (key == "MemAvailable:") mem_avail = val;
+            // Consume trailing unit (kB) if present
+            if (meminfo.peek() != '\n' && meminfo.peek() != EOF) {
+                meminfo >> unit;
+            }
         }
         if (mem_total > 0) {
             stats.mem_total_mb = mem_total / 1024;
@@ -50,25 +59,33 @@ public:
             stats.mem_percent = (double)(mem_total - mem_avail) / mem_total * 100.0;
         }
 
-        // Disk I/O stats
-        // /proc/diskstats format per line:
-        //   major minor name reads_completed reads_merged sectors_read time_reading
-        //   writes_completed writes_merged sectors_written time_writing ...
+        // Disk I/O stats — parse /proc/diskstats line-by-line to handle
+        // variable field counts across kernel versions safely.
         std::ifstream diskstats("/proc/diskstats");
-        unsigned major, minor;
-        std::string name;
-        uint64_t r_comp, r_merge, r_sect, r_time, w_comp, w_merge, w_sect, w_time;
         uint64_t total_read = 0, total_write = 0;
 
-        while (diskstats >> major >> minor >> name
-                      >> r_comp >> r_merge >> r_sect >> r_time
-                      >> w_comp >> w_merge >> w_sect >> w_time) {
-            // Only count whole-disk block devices (skip partitions like nvme0n1p1)
-            bool is_disk = name.rfind("sd", 0) == 0
-                        || name.rfind("vd", 0) == 0
-                        || name.rfind("nvme", 0) == 0
-                        || name.rfind("hd", 0) == 0;
-            if (is_disk) {
+        while (std::getline(diskstats, line)) {
+            std::istringstream iss2(line);
+            unsigned major, minor;
+            std::string name;
+            uint64_t r_comp, r_merge, r_sect, r_time, w_comp, w_merge, w_sect, w_time;
+
+            if (!(iss2 >> major >> minor >> name
+                       >> r_comp >> r_merge >> r_sect >> r_time
+                       >> w_comp >> w_merge >> w_sect >> w_time)) {
+                continue;
+            }
+
+            // Only count whole-disk block devices (skip partitions)
+            bool is_whole_disk = false;
+            if (name.rfind("sd", 0) == 0 && name.size() == 3) is_whole_disk = true;
+            else if (name.rfind("vd", 0) == 0 && name.size() == 3) is_whole_disk = true;
+            else if (name.rfind("hd", 0) == 0 && name.size() == 3) is_whole_disk = true;
+            else if (name.rfind("nvme", 0) == 0 && name.find('p') == std::string::npos) is_whole_disk = true;
+            // Include dm-* (device-mapper) for LVM/LUKS setups
+            else if (name.rfind("dm-", 0) == 0) is_whole_disk = true;
+
+            if (is_whole_disk) {
                 total_read += r_sect;
                 total_write += w_sect;
             }

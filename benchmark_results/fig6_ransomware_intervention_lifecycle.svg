@@ -1,0 +1,96 @@
+<svg width="960" height="460" viewBox="0 0 960 460" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/>
+    </marker>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6"/>
+    </marker>
+    <style>
+      .main-hdr { font-family: system-ui, -apple-system, sans-serif; font-size: 20px; font-weight: 800; fill: #0f172a; }
+      .box-title { font-family: system-ui, -apple-system, sans-serif; font-size: 15px; font-weight: 700; fill: #1e293b; }
+      .box-sub { font-family: system-ui, -apple-system, sans-serif; font-size: 12px; fill: #64748b; }
+      .intervene-txt { font-family: system-ui, -apple-system, sans-serif; font-size: 13px; font-weight: 700; fill: #2563eb; }
+      .res-lbl { font-family: system-ui, -apple-system, sans-serif; font-size: 13px; font-weight: 600; fill: #475569; }
+    </style>
+  </defs>
+
+  <!-- Base Card -->
+  <rect width="960" height="460" rx="16" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <text x="480" y="44" text-anchor="middle" class="main-hdr">Ransomware Attack Lifecycle &amp; HeuriX Intervention Point</text>
+
+  <!-- Top Sequence: 4 Attack Phases -->
+  <!-- Phase 1: Access -->
+  <g transform="translate(48, 80)">
+    <rect width="180" height="85" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+    <text x="90" y="34" text-anchor="middle" class="box-title">1) Access</text>
+    <text x="90" y="56" text-anchor="middle" class="box-sub">Foothold, kill backups</text>
+  </g>
+
+  <!-- Arrow 1->2 -->
+  <line x1="228" y1="122" x2="260" y2="122" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Phase 2: Recon -->
+  <g transform="translate(260, 80)">
+    <rect width="180" height="85" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+    <text x="90" y="34" text-anchor="middle" class="box-title">2) Recon</text>
+    <text x="90" y="56" text-anchor="middle" class="box-sub">Find targets, evade AV</text>
+  </g>
+
+  <!-- Arrow 2->3 -->
+  <line x1="440" y1="122" x2="472" y2="122" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Phase 3: Encryption (Highlighted Red Attack Target) -->
+  <g transform="translate(472, 80)">
+    <rect width="220" height="85" rx="12" fill="#fdf2f0" stroke="#e2b7b0" stroke-width="2"/>
+    <text x="110" y="34" text-anchor="middle" class="box-title" fill="#8c2318">3) High-Speed Encryption</text>
+    <text x="110" y="56" text-anchor="middle" class="box-sub" fill="#a63c32">AES-256 / ChaCha20 Multi-threaded</text>
+  </g>
+
+  <!-- Arrow 3->4 -->
+  <line x1="692" y1="122" x2="732" y2="122" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Phase 4: Extortion -->
+  <g transform="translate(732, 80)">
+    <rect width="180" height="85" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+    <text x="90" y="34" text-anchor="middle" class="box-title">4) Extortion</text>
+    <text x="90" y="56" text-anchor="middle" class="box-sub">Ransom note drop &amp; leak</text>
+  </g>
+
+  <!-- Intervention Arrow Down -->
+  <line x1="582" y1="165" x2="582" y2="230" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#arrow-blue)"/>
+  <text x="600" y="200" class="intervene-txt">HeuriX Intervenes Here</text>
+
+  <!-- Bottom Container: HeuriX Detection Engine -->
+  <g transform="translate(48, 230)">
+    <rect width="864" height="180" rx="14" fill="#f4f2ff" stroke="#c9c0f8" stroke-width="1.5" stroke-dasharray="6,6"/>
+    <text x="432" y="30" text-anchor="middle" class="box-title" fill="#2d1582">HeuriX Detection (Userspace C++20 Engine)</text>
+
+    <!-- 3 Internal Feature Cards -->
+    <!-- Card 1: Shannon Entropy -->
+    <g transform="translate(30, 48)">
+      <rect width="245" height="75" rx="10" fill="#ffffff" stroke="#c9c0f8" stroke-width="1.5"/>
+      <text x="122" y="30" text-anchor="middle" class="box-title" fill="#3c249c">Shannon Entropy</text>
+      <text x="122" y="50" text-anchor="middle" class="box-sub">12-D feature vector (H &gt; 7.5)</text>
+    </g>
+
+    <!-- Card 2: Sliding Window -->
+    <g transform="translate(310, 48)">
+      <rect width="245" height="75" rx="10" fill="#ffffff" stroke="#c9c0f8" stroke-width="1.5"/>
+      <text x="122" y="30" text-anchor="middle" class="box-title" fill="#3c249c">Sliding Window</text>
+      <text x="122" y="50" text-anchor="middle" class="box-sub">100 ms burst write tracking</text>
+    </g>
+
+    <!-- Card 3: Canary Files -->
+    <g transform="translate(590, 48)">
+      <rect width="245" height="75" rx="10" fill="#ffffff" stroke="#c9c0f8" stroke-width="1.5"/>
+      <text x="122" y="30" text-anchor="middle" class="box-title" fill="#3c249c">Dynamic Canaries</text>
+      <text x="122" y="50" text-anchor="middle" class="box-sub">Any touch = instant SIGKILL</text>
+    </g>
+
+    <!-- Bottom Result Banner -->
+    <rect x="30" y="135" width="804" height="30" rx="6" fill="#ffffff" stroke="#ded8fc"/>
+    <text x="432" y="155" text-anchor="middle" class="res-lbl">Result: SIGKILL / Process Intercept executed in &lt; 1.2 ms before target files can be encrypted</text>
+  </g>
+</svg>

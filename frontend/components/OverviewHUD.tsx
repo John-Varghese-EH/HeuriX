@@ -40,28 +40,34 @@ export function OverviewHUD({ alerts, threatsMitigated, targetPath, eventRate, u
     { name: 'Safe', value: 100 - totalThreat }
   ];
 
-  const COLORS = {
+  const COLORS: Record<string, string[]> = {
     secure: ['var(--hx-accent-green)', 'var(--hx-border)'],
     warning: ['var(--hx-accent-amber)', 'var(--hx-border)'],
     critical: ['var(--hx-accent-red)', 'var(--hx-border)']
+  };
+
+  const GAUGE_GLOW: Record<string, string> = {
+    secure: 'rgba(16, 185, 129, 0.25)',
+    warning: 'rgba(245, 158, 11, 0.25)',
+    critical: 'rgba(239, 68, 68, 0.25)'
   };
 
   // Live System Integrity Matrix powered by real filesystem events
   const fsEvents = events.filter(e => e.type === 'fs').map(e => e.data as any);
   const recentPaths = fsEvents.slice(-16).reverse(); // Newest first
   
-  const hashString = (str: string) => {
+  const getHexHash = (str: string) => {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
-      hash = ((hash << 5) - hash) + str.charCodeAt(i);
+      hash = (hash << 5) - hash + str.charCodeAt(i);
       hash |= 0;
     }
-    return Math.abs(hash).toString(16).padStart(4, '0').slice(-4).toUpperCase();
+    return '0x' + Math.abs(hash).toString(16).padStart(6, '0').substring(0, 6).toUpperCase();
   };
 
   const matrixBlocks = Array.from({ length: 16 }).map((_, i) => {
     const ev = recentPaths[i];
-    return ev ? `0x${hashString(ev.path)}` : '0x0000';
+    return ev ? getHexHash(ev.path) : '--------';
   });
 
   const isEngineOnline = engineStatus === 'running';
@@ -71,10 +77,10 @@ export function OverviewHUD({ alerts, threatsMitigated, targetPath, eventRate, u
       <div className="hx-header-row" style={{ marginBottom: '32px' }}>
         <div>
           <h1 className="hx-page-title" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            Security Operations Center
-            {status === 'secure' && <div style={{ fontSize: '12px', padding: '4px 12px', background: 'var(--hx-overlay-5)', color: 'var(--hx-accent-green)', borderRadius: '20px', border: '1px solid var(--hx-border)', display: 'flex', alignItems: 'center', gap: '6px' }}><CheckCircle size={14}/> SYSTEM SECURE</div>}
+            Dashboard
+            {status === 'secure' && <div style={{ fontSize: '12px', padding: '4px 12px', background: 'var(--hx-overlay-5)', color: 'var(--hx-accent-green)', borderRadius: '20px', border: '1px solid var(--hx-border)', display: 'flex', alignItems: 'center', gap: '6px' }}><CheckCircle size={14}/> SECURE</div>}
             {status === 'warning' && <div style={{ fontSize: '12px', padding: '4px 12px', background: 'var(--hx-overlay-5)', color: 'var(--hx-accent-amber)', borderRadius: '20px', border: '1px solid var(--hx-border)', display: 'flex', alignItems: 'center', gap: '6px' }}><AlertTriangle size={14}/> ELEVATED RISK</div>}
-            {status === 'critical' && <div style={{ fontSize: '12px', padding: '4px 12px', background: 'var(--hx-overlay-5)', color: 'var(--hx-accent-red)', borderRadius: '20px', border: '1px solid var(--hx-accent-red)', display: 'flex', alignItems: 'center', gap: '6px', animation: 'soft-pulse 2s infinite' }}><ShieldAlert size={14}/> ACTIVE THREAT</div>}
+            {status === 'critical' && <div style={{ fontSize: '12px', padding: '4px 12px', background: 'var(--hx-overlay-5)', color: 'var(--hx-accent-red)', borderRadius: '20px', border: '1px solid var(--hx-accent-red)', display: 'flex', alignItems: 'center', gap: '6px', animation: 'soft-pulse 2s infinite' }}><ShieldAlert size={14}/> THREAT DETECTED</div>}
           </h1>
           <p className="hx-page-desc">High-level threat intelligence and active mitigation status.</p>
         </div>
@@ -84,8 +90,8 @@ export function OverviewHUD({ alerts, threatsMitigated, targetPath, eventRate, u
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 2.5fr', gap: '24px', marginBottom: '24px' }}>
         {/* Threat Level Gauge */}
         <div className="panel" style={{ padding: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '100%', background: `radial-gradient(circle at 50% 120%, ${COLORS[status][0]}22, transparent 60%)`, pointerEvents: 'none' }} />
-          <h3 style={{ fontSize: '14px', color: 'var(--hx-text-secondary)', position: 'absolute', top: '24px', left: '24px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Current Threat Level</h3>
+          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '100%', background: `radial-gradient(circle at 50% 120%, ${GAUGE_GLOW[status]}, transparent 60%)`, pointerEvents: 'none' }} />
+          <h3 style={{ fontSize: '14px', color: 'var(--hx-text-secondary)', position: 'absolute', top: '24px', left: '24px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Risk Assessment</h3>
           <div style={{ width: '100%', height: '200px', marginTop: '20px', position: 'relative', zIndex: 1 }}>
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -108,7 +114,7 @@ export function OverviewHUD({ alerts, threatsMitigated, targetPath, eventRate, u
               </PieChart>
             </ResponsiveContainer>
             <div style={{ position: 'absolute', top: '55%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center' }}>
-              <div style={{ fontSize: '36px', fontWeight: 700, color: COLORS[status][0], fontFamily: 'var(--hx-font-mono)', textShadow: `0 0 20px ${COLORS[status][0]}88` }}>
+              <div style={{ fontSize: '36px', fontWeight: 700, color: COLORS[status][0], fontFamily: 'var(--hx-font-mono)', textShadow: `0 0 20px ${GAUGE_GLOW[status]}` }}>
                 {threatLevelData[0].value}%
               </div>
             </div>
@@ -164,24 +170,28 @@ export function OverviewHUD({ alerts, threatsMitigated, targetPath, eventRate, u
         <div className="panel" style={{ padding: '24px', position: 'relative', overflow: 'hidden' }}>
           <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: '50%', background: `linear-gradient(0deg, ${status === 'critical' ? 'rgba(239, 68, 68, 0.05)' : 'rgba(16, 185, 129, 0.05)'} 0%, transparent 100%)`, pointerEvents: 'none' }} />
           <h2 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            System Integrity Matrix (Live IO)
+            Live I/O Activity
             <span style={{ fontSize: '11px', color: status === 'critical' ? 'var(--hx-accent-red)' : 'var(--hx-accent-green)', letterSpacing: '0.1em', animation: status === 'critical' ? 'soft-pulse 1s infinite' : 'none' }}>
-              {status === 'critical' ? 'INTEGRITY BREACH' : 'VERIFIED ALL'}
+              {status === 'critical' ? 'THREAT DETECTED' : 'SECURE'}
             </span>
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', position: 'relative', zIndex: 1 }}>
             {matrixBlocks.map((hex, i) => (
               <div key={i} style={{ 
                 height: '32px', 
-                background: hex !== '0x0000' ? (status === 'critical' && i % 3 === 0 ? 'rgba(239, 68, 68, 0.2)' : 'rgba(16, 185, 129, 0.15)') : 'rgba(16, 185, 129, 0.02)',
-                border: `1px solid ${hex !== '0x0000' ? (status === 'critical' && i % 3 === 0 ? 'var(--hx-accent-red)' : 'var(--hx-accent-green)') : 'var(--hx-border)'}`,
+                background: hex !== '--------' ? (status === 'critical' && i % 3 === 0 ? 'rgba(239, 68, 68, 0.2)' : 'rgba(16, 185, 129, 0.15)') : 'rgba(16, 185, 129, 0.02)',
+                border: `1px solid ${hex !== '--------' ? (status === 'critical' && i % 3 === 0 ? 'var(--hx-accent-red)' : 'var(--hx-accent-green)') : 'var(--hx-border)'}`,
                 borderRadius: '4px',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: hex !== '0x0000' ? (status === 'critical' && i % 3 === 0 ? 'var(--hx-accent-red)' : 'var(--hx-accent-green)') : 'var(--hx-text-dim)',
-                fontSize: '11px', fontFamily: 'var(--hx-font-mono)', fontWeight: hex !== '0x0000' ? 600 : 400,
-                boxShadow: status === 'critical' && i % 3 === 0 ? '0 0 10px rgba(239, 68, 68, 0.4)' : (hex !== '0x0000' ? '0 0 8px rgba(16, 185, 129, 0.2)' : 'none'),
+                color: hex !== '--------' ? (status === 'critical' && i % 3 === 0 ? 'var(--hx-accent-red)' : 'var(--hx-accent-green)') : 'var(--hx-text-dim)',
+                fontSize: '11px', fontFamily: 'var(--hx-font-mono)', fontWeight: hex !== '--------' ? 600 : 400,
+                boxShadow: status === 'critical' && i % 3 === 0 ? '0 0 10px rgba(239, 68, 68, 0.4)' : (hex !== '--------' ? '0 0 8px rgba(16, 185, 129, 0.2)' : 'none'),
                 animation: status === 'critical' && i % 3 === 0 ? 'soft-pulse 1s infinite' : 'none',
-                transition: 'all 0.3s ease'
+                transition: 'all 0.3s ease',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                padding: '0 4px'
               }}>
                 {hex}
               </div>
@@ -215,14 +225,14 @@ export function OverviewHUD({ alerts, threatsMitigated, targetPath, eventRate, u
                   <Terminal size={18} color="var(--hx-accent-purple)" />
                 </div>
                 <div>
-                  <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--hx-text-primary)' }}>Kernel Mitigator Hook</div>
-                  <div style={{ fontSize: '12px', color: 'var(--hx-text-secondary)', marginTop: '2px' }}>SIGSTOP/SIGKILL Dispatcher</div>
+                  <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--hx-text-primary)' }}>Process Mitigation Hook</div>
+                  <div style={{ fontSize: '12px', color: 'var(--hx-text-secondary)', marginTop: '2px' }}>Process State Control</div>
                 </div>
               </div>
               {isEngineOnline ? (
-                <div style={{ fontSize: '12px', color: 'var(--hx-accent-green)', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 600 }}><div style={{width: 8, height: 8, borderRadius: '50%', background: 'var(--hx-accent-green)', boxShadow: '0 0 8px var(--hx-accent-green)'}}/> ARMED</div>
+                <div style={{ fontSize: '12px', color: 'var(--hx-accent-green)', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 600 }}><div style={{width: 8, height: 8, borderRadius: '50%', background: 'var(--hx-accent-green)', boxShadow: '0 0 8px var(--hx-accent-green)'}}/> ENABLED</div>
               ) : (
-                <div style={{ fontSize: '12px', color: 'var(--hx-text-dim)', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 600 }}><div style={{width: 8, height: 8, borderRadius: '50%', background: 'var(--hx-text-dim)'}}/> DISARMED</div>
+                <div style={{ fontSize: '12px', color: 'var(--hx-text-dim)', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 600 }}><div style={{width: 8, height: 8, borderRadius: '50%', background: 'var(--hx-text-dim)'}}/> DISABLED</div>
               )}
             </div>
           </div>
@@ -255,7 +265,7 @@ export function OverviewHUD({ alerts, threatsMitigated, targetPath, eventRate, u
               <tbody>
                 {recentAlerts.map((alert, i) => {
                   const safeTime = alert.timestamp_ms ? new Date(alert.timestamp_ms).toLocaleTimeString() : 'Unknown Time';
-                  const isBlocked = alert.action?.includes('kill') || alert.action?.includes('stop') || alert.action === 'terminated_tree';
+                  const isBlocked = alert.action?.includes('kill') || alert.action?.includes('stop') || alert.action?.includes('quarantine') || alert.action?.includes('terminated_tree') || alert.action?.includes('isolate');
                   const actionLabel = (alert.action || 'NONE').toUpperCase().replace('_', ' ');
                   return (
                     <tr key={i} style={{ background: i % 2 === 0 ? 'var(--hx-overlay-2)' : 'transparent' }}>

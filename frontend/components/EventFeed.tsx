@@ -123,8 +123,8 @@ export function EventFeed({ events, onClear }: EventFeedProps) {
               return (
                 <div key={i} style={{ display: 'grid', gridTemplateColumns: '120px 120px 1fr', gap: '16px', padding: '10px 16px', borderBottom: '1px solid rgba(255,255,255,0.02)', fontSize: '13px', alignItems: 'center' }}>
                   <span style={{ color: 'var(--hx-text-dim)' }}>{safeTime}</span>
-                  <span style={{ color: getEventColor(event_type), display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 500 }}>
-                    {getEventIcon(event_type)} {event_type}
+                  <span style={{ color: getEventColor(event_type.toUpperCase()), display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 500 }}>
+                    {getEventIcon(event_type.toUpperCase())} {event_type.toUpperCase()}
                   </span>
                   <span style={{ color: 'var(--hx-text-secondary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                     {path}
@@ -133,7 +133,7 @@ export function EventFeed({ events, onClear }: EventFeedProps) {
               );
             } else {
               const { process_name, action, timestamp_ms, entropy, pid } = item.data;
-              const isBlocked = action?.includes('kill') || action?.includes('stop');
+              const isBlocked = action?.includes('kill') || action?.includes('stop') || action?.includes('quarantine') || action?.includes('terminated_tree') || action?.includes('isolate');
               const safeTime = timestamp_ms ? new Date(timestamp_ms).toISOString().substring(11, 23) : 'Unknown Time';
               return (
                 <div key={i} style={{ display: 'grid', gridTemplateColumns: '120px 120px 1fr', gap: '16px', padding: '12px 16px', margin: '4px 0', background: 'rgba(239, 68, 68, 0.05)', borderLeft: '3px solid var(--hx-accent-red)', borderRadius: '4px', fontSize: '13px', alignItems: 'center' }}>

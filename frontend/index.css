@@ -6,6 +6,7 @@
   --hx-bg-panel: #0d0d12;
   --hx-bg-panel-hover: #14141c;
   --hx-bg-active: #1a1a24;
+  --hx-bg-header: #14141c;
   
   --hx-border: rgba(255, 255, 255, 0.06);
   --hx-border-highlight: rgba(255, 255, 255, 0.12);
@@ -28,6 +29,7 @@
   --hx-accent-red: #ef4444;
   --hx-accent-green: #10b981;
   --hx-accent-amber: #f59e0b;
+  --hx-accent-purple: #a855f7;
   
   /* Shared values */
   --hx-radius-sm: 6px;

@@ -1,8 +1,3 @@
-pub mod grpc;
-
-use grpc::api::heurix_daemon_client::HeurixDaemonClient;
-use grpc::api::telemetry_stream_response::Payload;
-use grpc::api::{EngineConfig as GrpcEngineConfig, GetConfigRequest, StreamRequest};
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -16,7 +11,6 @@ fn daemon_addr() -> String {
     std::env::var("HEURIX_DAEMON_ADDR").unwrap_or_else(|_| "http://127.0.0.1:50051".to_string())
 }
 
-// The UI payload shapes are unchanged so the frontend needs no edits.
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(tag = "type", content = "data")]
 pub enum EngineMessage {
@@ -45,44 +39,13 @@ pub enum EngineMessage {
         mem_percent: f64,
         mem_used_mb: u64,
         mem_total_mb: u64,
+        #[serde(default)]
         io_read_mb: f64,
+        #[serde(default)]
         io_write_mb: f64,
     },
     #[serde(rename = "status")]
     Status { status: String },
-}
-
-impl From<Payload> for EngineMessage {
-    fn from(p: Payload) -> Self {
-        match p {
-            Payload::Event(e) => EngineMessage::Event {
-                path: e.path,
-                event_type: e.event_type,
-                timestamp_ms: e.timestamp_ms,
-            },
-            Payload::Alert(a) => EngineMessage::Alert {
-                severity: a.severity,
-                description: a.description,
-                entropy: a.entropy,
-                pid: a.pid,
-                process_name: a.process_name,
-                action: a.action,
-                quarantine_path: (!a.quarantine_path.is_empty()).then_some(a.quarantine_path),
-                killed_pids: (!a.killed_pids.is_empty()).then_some(a.killed_pids),
-                threat_score: (a.threat_score > 0.0).then_some(a.threat_score),
-                timestamp_ms: a.timestamp_ms,
-            },
-            Payload::Stats(s) => EngineMessage::Stats {
-                cpu_percent: s.cpu_percent,
-                mem_percent: s.mem_percent,
-                mem_used_mb: s.mem_used_mb,
-                mem_total_mb: s.mem_total_mb,
-                io_read_mb: s.io_read_mb,
-                io_write_mb: s.io_write_mb,
-            },
-            Payload::Status(status) => EngineMessage::Status { status },
-        }
-    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -112,53 +75,24 @@ impl Default for EngineConfig {
     }
 }
 
-impl From<GrpcEngineConfig> for EngineConfig {
-    fn from(c: GrpcEngineConfig) -> Self {
-        Self {
-            watch_dir: PathBuf::from(c.watch_dir),
-            entropy_threshold: c.entropy_threshold,
-            burst_count: c.burst_count,
-            burst_window_ms: c.burst_window_ms,
-            auto_kill: c.auto_kill,
-            auto_mitigate: c.auto_mitigate,
-            mitigation_action: c.mitigation_action,
-        }
-    }
-}
-
-impl From<&EngineConfig> for GrpcEngineConfig {
-    fn from(c: &EngineConfig) -> Self {
-        Self {
-            watch_dir: c.watch_dir.to_string_lossy().to_string(),
-            entropy_threshold: c.entropy_threshold,
-            burst_count: c.burst_count,
-            burst_window_ms: c.burst_window_ms,
-            auto_kill: c.auto_kill,
-            auto_mitigate: c.auto_mitigate,
-            mitigation_action: c.mitigation_action.clone(),
-        }
-    }
-}
-
 pub struct EngineState {
     connected: Arc<AtomicBool>,
-    /// Last config seen from / sent to the daemon (used when it is offline).
     config: Arc<Mutex<EngineConfig>>,
+    /// Tracks the child process so we can kill it on exit.
+    daemon_pid: Arc<Mutex<Option<u32>>>,
+    /// The resolved path to the project root (parent of src-tauri).
+    project_root: PathBuf,
 }
 
 impl EngineState {
-    pub fn new() -> Self {
+    pub fn new(project_root: PathBuf) -> Self {
         Self {
             connected: Arc::new(AtomicBool::new(false)),
             config: Arc::new(Mutex::new(EngineConfig::default())),
+            daemon_pid: Arc::new(Mutex::new(None)),
+            project_root,
         }
     }
-}
-
-async fn client() -> Result<HeurixDaemonClient<tonic::transport::Channel>, String> {
-    HeurixDaemonClient::connect(daemon_addr())
-        .await
-        .map_err(|e| format!("HeuriX daemon not reachable at {}: {}", daemon_addr(), e))
 }
 
 fn emit_status(app: &AppHandle, status: &str) {
@@ -168,40 +102,116 @@ fn emit_status(app: &AppHandle, status: &str) {
     );
 }
 
+/// Find the engine binary by searching known paths relative to the project root.
+fn find_engine_binary(project_root: &PathBuf) -> Option<PathBuf> {
+    let candidates = [
+        project_root.join("build/heurix-engine"),
+        project_root.join("target/release/heurix-engine"),
+        PathBuf::from("/usr/local/bin/heurix-engine"),
+    ];
+    for p in &candidates {
+        if p.exists() {
+            return Some(p.clone());
+        }
+    }
+    None
+}
+
+/// Launch the daemon process with the given config. Returns the PID on success.
+fn launch_daemon(bin: &PathBuf, cfg: &EngineConfig) -> Result<u32, String> {
+    let mut cmd = std::process::Command::new(bin);
+    cmd.arg("--watch").arg(&cfg.watch_dir);
+    cmd.arg("--entropy-threshold").arg(cfg.entropy_threshold.to_string());
+    cmd.arg("--burst-count").arg(cfg.burst_count.to_string());
+    cmd.arg("--burst-window-ms").arg(cfg.burst_window_ms.to_string());
+    if cfg.auto_kill {
+        cmd.arg("--auto-kill").arg("true");
+    }
+    cmd.arg("--auto-mitigate").arg(if cfg.auto_mitigate { "true" } else { "false" });
+
+    // Detach stdout/stderr so the child doesn't block on pipe buffers.
+    cmd.stdout(std::process::Stdio::null());
+    cmd.stderr(std::process::Stdio::inherit());
+
+    let child = cmd.spawn().map_err(|e| format!("Failed to spawn daemon: {}", e))?;
+    Ok(child.id())
+}
+
 /// Keeps a telemetry stream open to the daemon, reconnecting with backoff.
+/// On first connect failure, tries to auto-launch the daemon.
 async fn telemetry_loop(app: AppHandle) {
-    let mut backoff = Duration::from_secs(1);
+    let mut backoff = Duration::from_millis(500);
+    let client = reqwest::Client::builder()
+        .timeout(Duration::from_secs(300))
+        .build()
+        .unwrap_or_default();
+
+    let mut auto_launch_attempted = false;
+
     loop {
         let connected = app.state::<EngineState>().connected.clone();
 
-        if let Ok(mut c) = client().await {
-            if let Ok(resp) = c.stream_telemetry(StreamRequest {}).await {
+        let resp = client.get(format!("{}/telemetry", daemon_addr())).send().await;
+        match resp {
+            Ok(mut stream) => {
                 connected.store(true, Ordering::SeqCst);
-                backoff = Duration::from_secs(1);
+                emit_status(&app, "connected");
+                backoff = Duration::from_millis(500);
+                auto_launch_attempted = false;
 
-                // Refresh cached config from the daemon's source of truth.
-                if let Ok(cfg) = c.get_config(GetConfigRequest {}).await {
-                    *app.state::<EngineState>().config.lock().await = cfg.into_inner().into();
+                // Refresh cached config from the daemon.
+                if let Ok(cfg_resp) = client.get(format!("{}/config", daemon_addr())).send().await {
+                    if let Ok(cfg) = cfg_resp.json::<EngineConfig>().await {
+                        *app.state::<EngineState>().config.lock().await = cfg;
+                    }
                 }
 
-                let mut stream = resp.into_inner();
-                loop {
-                    match stream.message().await {
-                        Ok(Some(msg)) => {
-                            let Some(payload) = msg.payload else { continue };
-                            let ui: EngineMessage = payload.into();
-                            let topic = match ui {
-                                EngineMessage::Event { .. } => "heurix://fs-event",
-                                EngineMessage::Alert { .. } => "heurix://alert",
-                                EngineMessage::Stats { .. } => "heurix://stats",
-                                EngineMessage::Status { .. } => "heurix://status",
-                            };
-                            let _ = app.emit(topic, &ui);
+                let mut buffer = Vec::new();
+                while let Some(chunk_res) = stream.chunk().await.unwrap_or(None) {
+                    buffer.extend_from_slice(&chunk_res);
+
+                    while let Some(idx) = buffer.iter().position(|&b| b == b'\n') {
+                        let line_bytes = buffer[..idx].to_vec();
+                        buffer = buffer[idx + 1..].to_vec();
+
+                        let line = String::from_utf8_lossy(&line_bytes);
+                        if line.trim().is_empty() {
+                            continue;
                         }
-                        Ok(None) => break,
-                        Err(e) => {
-                            eprintln!("telemetry stream error: {e}");
-                            break;
+
+                        match serde_json::from_str::<EngineMessage>(&line) {
+                            Ok(ui) => {
+                                let topic = match &ui {
+                                    EngineMessage::Event { .. } => "heurix://fs-event",
+                                    EngineMessage::Alert { .. } => "heurix://alert",
+                                    EngineMessage::Stats { .. } => "heurix://stats",
+                                    EngineMessage::Status { .. } => "heurix://status",
+                                };
+                                let _ = app.emit(topic, &ui);
+                            }
+                            Err(e) => {
+                                eprintln!("[HeuriX] JSON parse error: {} on line: {}", e, line);
+                            }
+                        }
+                    }
+                }
+            }
+            Err(_) => {
+                // Daemon not reachable — try to auto-launch once.
+                if !auto_launch_attempted {
+                    auto_launch_attempted = true;
+                    let state = app.state::<EngineState>();
+                    if let Some(bin) = find_engine_binary(&state.project_root) {
+                        let cfg = state.config.lock().await.clone();
+                        match launch_daemon(&bin, &cfg) {
+                            Ok(pid) => {
+                                eprintln!("[HeuriX] Auto-launched daemon (PID {}) from {:?}", pid, bin);
+                                *state.daemon_pid.lock().await = Some(pid);
+                                // Give daemon time to bind its port.
+                                sleep(Duration::from_millis(800)).await;
+                                continue; // Retry connection immediately.
+                            }
+                            Err(e) => eprintln!("[HeuriX] Failed to auto-launch daemon: {}", e),
                         }
                     }
                 }
@@ -221,37 +231,40 @@ fn get_engine_status(state: tauri::State<EngineState>) -> bool {
     state.connected.load(Ordering::SeqCst)
 }
 
-/// The daemon's lifecycle is owned by the OS service manager; the UI can only
-/// report whether it is reachable.
 #[tauri::command]
 async fn restart_engine(state: tauri::State<'_, EngineState>) -> Result<(), String> {
     if state.connected.load(Ordering::SeqCst) {
         return Ok(());
     }
-    if client().await.is_ok() {
+
+    // Check if daemon is already reachable.
+    let client = reqwest::Client::new();
+    if client.get(format!("{}/config", daemon_addr())).send().await.is_ok() {
         return Ok(());
     }
 
-    // Try auto-launching local build binary if available
-    let candidates = vec![
-        PathBuf::from("./build/heurix-engine"),
-        PathBuf::from("../build/heurix-engine"),
-        PathBuf::from("/usr/local/bin/heurix-engine"),
-    ];
+    // Kill any stale daemon we previously launched.
+    if let Some(pid) = state.daemon_pid.lock().await.take() {
+        let _ = std::process::Command::new("kill").arg(pid.to_string()).status();
+        sleep(Duration::from_millis(300)).await;
+    }
 
-    for bin in candidates {
-        if bin.exists() {
-            let _ = std::process::Command::new(&bin).spawn();
-            sleep(Duration::from_millis(600)).await;
-            if client().await.is_ok() {
-                return Ok(());
-            }
+    let bin = find_engine_binary(&state.project_root)
+        .ok_or_else(|| "Cannot find heurix-engine binary. Run `cmake --build build` first.".to_string())?;
+
+    let cfg = state.config.lock().await.clone();
+    let pid = launch_daemon(&bin, &cfg)?;
+    *state.daemon_pid.lock().await = Some(pid);
+
+    // Wait for daemon to become reachable.
+    for _ in 0..10 {
+        sleep(Duration::from_millis(300)).await;
+        if client.get(format!("{}/config", daemon_addr())).send().await.is_ok() {
+            return Ok(());
         }
     }
 
-    client().await.map(|_| ()).map_err(|e| {
-        format!("{e}. Start the backend daemon with `./build/heurix-engine` or `sudo systemctl start heurix`.")
-    })
+    Err("Daemon launched but not reachable after 3s. Check build/heurix-engine output.".to_string())
 }
 
 #[tauri::command]
@@ -261,7 +274,6 @@ async fn update_config(
 ) -> Result<(), String> {
     let v: serde_json::Value = serde_json::from_str(&config_json).map_err(|e| e.to_string())?;
 
-    // Start from the current config so fields the UI doesn't send are kept.
     let mut cfg = state.config.lock().await.clone();
     if let Some(x) = v["watch_dir"].as_str() { cfg.watch_dir = PathBuf::from(x); }
     if let Some(x) = v["entropy_threshold"].as_f64() { cfg.entropy_threshold = x; }
@@ -271,15 +283,16 @@ async fn update_config(
     if let Some(x) = v["auto_kill"].as_bool() { cfg.auto_kill = x; }
     if let Some(x) = v["mitigation_action"].as_str() { cfg.mitigation_action = x.to_string(); }
 
-    let resp = client()
-        .await?
-        .update_config(GrpcEngineConfig::from(&cfg))
+    let client = reqwest::Client::new();
+    let res = client
+        .post(format!("{}/config", daemon_addr()))
+        .json(&cfg)
+        .send()
         .await
-        .map_err(|s| s.message().to_string())?
-        .into_inner();
+        .map_err(|e| e.to_string())?;
 
-    if !resp.success {
-        return Err(resp.message);
+    if !res.status().is_success() {
+        return Err(format!("Backend rejected config update: {}", res.status()));
     }
     *state.config.lock().await = cfg;
     Ok(())
@@ -287,9 +300,10 @@ async fn update_config(
 
 #[tauri::command]
 async fn get_config(state: tauri::State<'_, EngineState>) -> Result<String, String> {
-    if let Ok(mut c) = client().await {
-        if let Ok(resp) = c.get_config(GetConfigRequest {}).await {
-            *state.config.lock().await = resp.into_inner().into();
+    let client = reqwest::Client::new();
+    if let Ok(resp) = client.get(format!("{}/config", daemon_addr())).send().await {
+        if let Ok(cfg) = resp.json::<EngineConfig>().await {
+            *state.config.lock().await = cfg;
         }
     }
     let cfg = state.config.lock().await.clone();
@@ -299,7 +313,6 @@ async fn get_config(state: tauri::State<'_, EngineState>) -> Result<String, Stri
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_store::Builder::default().build())
-        .manage(EngineState::new())
         .invoke_handler(tauri::generate_handler![
             get_engine_status,
             restart_engine,
@@ -307,6 +320,22 @@ pub fn run() {
             get_config
         ])
         .setup(|app| {
+            // Resolve project root: src-tauri/../ = project root.
+            let project_root = app.path().resource_dir()
+                .unwrap_or_else(|_| std::env::current_dir().unwrap_or_default());
+
+            // In dev mode, current_dir is the project root.
+            // In production, resource_dir points inside the bundle.
+            // We also check CARGO_MANIFEST_DIR for dev builds.
+            let root = if let Ok(manifest_dir) = std::env::var("CARGO_MANIFEST_DIR") {
+                PathBuf::from(manifest_dir).parent().map(|p| p.to_path_buf()).unwrap_or(project_root)
+            } else {
+                project_root
+            };
+
+            eprintln!("[HeuriX] Project root: {:?}", root);
+
+            app.manage(EngineState::new(root));
             tauri::async_runtime::spawn(telemetry_loop(app.handle().clone()));
             Ok(())
         })

@@ -1,0 +1,143 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master, develop]
+    paths:
+      - 'src/**'
+      - 'include/**'
+      - 'tests/**'
+      - 'CMakeLists.txt'
+      - '.github/workflows/ci.yml'
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  # ─────────────────────────────────────────────────────────────────
+  # Build & Unit Tests (Linux)
+  # ─────────────────────────────────────────────────────────────────
+  build-and-test-linux:
+    name: Build & Test (Ubuntu)
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        build_type: [Debug, Release]
+        compiler: [g++]
+
+    env:
+      CC: gcc
+      CXX: ${{ matrix.compiler }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            build-essential cmake libssl-dev
+
+      - name: Configure (engine + tests)
+        run: |
+          cmake -B build \
+            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+            -DBUILD_TESTS=ON \
+            -DCMAKE_CXX_COMPILER=${{ matrix.compiler }}
+
+      - name: Build engine
+        run: cmake --build build --target heurix-engine --parallel $(nproc)
+
+      - name: Build tests
+        run: cmake --build build --target heurix-tests --parallel $(nproc)
+
+      - name: Run unit tests
+        working-directory: build
+        run: ctest --output-on-failure --timeout 120
+
+      - name: Upload test results on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.build_type }}-${{ matrix.compiler }}
+          path: build/Testing/
+
+  # ─────────────────────────────────────────────────────────────────
+  # Static Analysis (clang-tidy) — optional, non-blocking
+  # ─────────────────────────────────────────────────────────────────
+  lint:
+    name: Lint (clang-tidy)
+    runs-on: ubuntu-latest
+    continue-on-error: true   # Informational only — does not block merges
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            clang clang-tidy cmake libssl-dev
+
+      - name: Configure (generate compile_commands.json)
+        run: |
+          cmake -B build_lint \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DBUILD_TESTS=ON \
+            -DCMAKE_CXX_COMPILER=clang++ \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
+      - name: Run clang-tidy on core sources
+        run: |
+          clang-tidy \
+            -p build_lint \
+            src/core/entropy.cpp \
+            src/core/features.cpp \
+            src/core/ml_model.cpp \
+            src/core/event_bus.cpp \
+            -- \
+            -std=c++20 \
+            -Iinclude \
+            2>&1 | tee clang-tidy-report.txt || true
+          echo "::notice::See clang-tidy-report.txt for full output"
+
+      - name: Upload clang-tidy report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: clang-tidy-report
+          path: clang-tidy-report.txt
+
+  # ─────────────────────────────────────────────────────────────────
+  # Integration Tests
+  # Only runs on push to main/master (not every PR) since it requires
+  # a compiled engine binary and takes ~30s.
+  # ─────────────────────────────────────────────────────────────────
+  integration-test:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    needs: build-and-test-linux
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            build-essential cmake libssl-dev
+
+      - name: Build engine (Release)
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build --target heurix-engine --parallel $(nproc)
+
+      - name: Run integration tests
+        run: |
+          python3 tests/integration_test.py \
+            --engine ./build/heurix-engine \
+            --timeout 30

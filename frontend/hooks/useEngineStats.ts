@@ -23,7 +23,7 @@ export function useEngineStats() {
   useTauriEvent<{type: string, data: SystemStats}>('heurix://stats', useCallback((payload) => {
     const raw = payload.data;
 
-    // Apply EMA smoothing for professional feel
+    // Apply EMA smoothing for metrics visualization
     const smoothed: SystemStats = emaRef.current
       ? {
           cpu_percent: ema(emaRef.current.cpu_percent, raw.cpu_percent),

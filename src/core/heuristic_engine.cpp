@@ -220,21 +220,7 @@ std::optional<Alert> HeuristicEngine::analyze(const FsEvent& event) {
         feature_logger_.write(now, features);
     }
 
-    // ML Model Evaluation
-    if (config_.enable_ml && ml_model_.loaded()) {
-        double ml_prob = ml_model_.predict(features);
-        if (ml_prob >= config_.ml_threshold) {
-            Alert a;
-            a.severity = ml_prob > 0.95 ? Severity::critical : Severity::high;
-            a.description = "ML Random Forest ransomware alert (prob=" + std::to_string(static_cast<int>(ml_prob * 100)) + "%)";
-            a.timestamp_ms = now;
-            a.threat_score = ml_prob * 100.0;
-            current_threat_score_ = std::max(current_threat_score_, a.threat_score);
-            return a;
-        }
-    }
-
-    // 1. Canary modification - critical (also caught by periodic verify_canaries)
+    // 1. Canary modification - critical
     if (canaries_.find(event.path) != canaries_.end()) {
         Alert a;
         a.severity = Severity::critical;
@@ -255,6 +241,23 @@ std::optional<Alert> HeuristicEngine::analyze(const FsEvent& event) {
         current_threat_score_ = std::max(current_threat_score_, 80.0);
         return a;
     }
+
+    // ML Model Evaluation
+    if (config_.enable_ml && ml_model_.loaded()) {
+        double ml_prob = ml_model_.predict(features);
+        if (ml_prob >= config_.ml_threshold) {
+            Alert a;
+            a.severity = ml_prob > 0.95 ? Severity::critical : Severity::high;
+            a.description = "ML Random Forest ransomware alert (prob=" + std::to_string(static_cast<int>(ml_prob * 100)) + "%)";
+            a.timestamp_ms = now;
+            a.threat_score = ml_prob * 100.0;
+            current_threat_score_ = std::max(current_threat_score_, a.threat_score);
+            return a;
+        }
+    }
+
+
+
 
     // 3. Mass-rename / ransom extension append detector
     // Tracks rename events; N renames in window that append a blacklisted extension -> critical
@@ -286,7 +289,7 @@ std::optional<Alert> HeuristicEngine::analyze(const FsEvent& event) {
     if (event.type == EventType::modify) {
         // Skip tiny/empty and safelisted files
         if (!is_safelisted(event.path)) {
-            double ent = file_entropy_quick(event.path);
+            double ent = features[1];
             if (ent > config_.entropy_threshold) {
                 record_high_entropy(now);
 
